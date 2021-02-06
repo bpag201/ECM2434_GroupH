@@ -7,6 +7,7 @@ class User(models.Model):
         STUDENT = "STU", _("Student")
         STAFF = "STF", _("Staff")
         ADMIN = "ADM", _("Admin")
+        WELFARE = "WEL", _("Welfare")
 
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=20)
