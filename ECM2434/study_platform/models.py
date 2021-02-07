@@ -165,7 +165,7 @@ class Reward(models.Model):
         return self.name
 
 
-class Mod(models.Model):
+class Accessory(models.Model):
     name = models.CharField()
     description = models.TextField()
     graphic = models.ImageField()
@@ -175,16 +175,16 @@ class Mod(models.Model):
         return self.name
 
 
-class Accessory(models.Model):
+class Mod(models.Model):
     name = models.CharField()
     description = models.TextField()
-    graphic = models.ImageField()
-    mod = models.ForeignKey(Mod, on_delete=models.CASCADE)
+    effect = models.CharField()  # Assuming effects can be applied by changing some parameters. 
+    accessory = models.ForeignKey(Accessory, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
-
-
+    
+    
 class UserTitle(models.Model):
     content = models.CharField(max_length=20)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
