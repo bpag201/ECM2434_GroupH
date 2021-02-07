@@ -64,11 +64,11 @@ class College(models.Model):
 
 class Blog(models.Model):
     class Categories(models.TextChoices):
-        STUDYNTOE = "STN", _("Study Note")
+        STUDYNOTE = "STN", _("Study Note")
 
     post_to = models.ForeignKey(College, on_delete=models.CASCADE)
     title = models.CharField()
-    category = models.CharField(max_length=3, choices=Categories, default=Categories.STUDYNTOE)
+    category = models.CharField(max_length=3, choices=Categories, default=Categories.STUDYNOTE)
     content = models.TextField()
     author = models.ForeignKey(User, on_delete=models.SET_NULL)  # If we allow multiple participants then don't use this
     updated_on = models.DateTimeField(auto_now=True)
