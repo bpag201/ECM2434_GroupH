@@ -152,6 +152,11 @@ class Achievement(models.Model):
 class Reward(models.Model):
     class Effect(models.TextChoices):
         EMPTY = "EMP", _("Empty")
+        POLICE = "POL", _("Police")
+        THIEF = "THF", _("Thief")
+        SHIELD = "SHD", _("Shield")
+        BLIND = "BLN", _("Blind")
+        BOOST = "BST", _("Boost")
 
     name = models.CharField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
