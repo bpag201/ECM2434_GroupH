@@ -71,6 +71,7 @@ class Blog(models.Model):
     category = models.CharField(max_length=3, choices=Categories, default=Categories.STUDYNOTE)
     content = models.TextField()
     author = models.ForeignKey(User, on_delete=models.SET_NULL)  # If we allow multiple participants then don't use this
+    participants = models.ManyToManyField(User)                  # Well ...
     updated_on = models.DateTimeField(auto_now=True)
     created_on = models.DateTimeField(auto_now_add=True)
     upvotes = models.IntegerField()
@@ -86,6 +87,7 @@ class TeamBlog(models.Model):
     title = models.CharField()
     content = models.TextField()
     author = models.ForeignKey(User, on_delete=models.SET_NULL)  # If we allow multiple participants then don't use this
+    participants = models.ManyToManyField(User)                  # Well ...
     team = models.ForeignKey(Team, on_delete=models.SET_NULL)
     updated_on = models.DateTimeField(auto_now=True)
     created_on = models.DateTimeField(auto_now_add=True)
@@ -140,6 +142,7 @@ class WelfareResult(models.Model):
 
 class Achievement(models.Model):
     name = models.CharField()
+    description = models.TextField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -174,6 +177,7 @@ class Accessory(models.Model):
     name = models.CharField()
     description = models.TextField()
     graphic = models.ImageField()
+    has_mods = models.BooleanField()
     target = models.ForeignKey(Reward, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -196,6 +200,11 @@ class UserTitle(models.Model):
 
     def __str__(self):
         return self.content
+    
+    
+class QuizTag():
+    content = models.CharField()
+    quiz = models.ForeignKey(Quiz,on_delete=models.CASCADE)
 
 
 """ User might be assigned to a team, this creates a column to store the corresponding information """
