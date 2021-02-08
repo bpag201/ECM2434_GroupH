@@ -217,7 +217,7 @@ class QuizTag():
     quiz = models.ForeignKey(Quiz,on_delete=models.CASCADE)
 
 
-""" User might be assigned to a team, this creates a column to store the corresponding information """
-User.team = models.ForeignKey(Team, on_delete=models.SET_NULL)
-""" Create column to let courses bind with colleges """
-Course.college = models.ForeignKey(College, on_delete=models.CASCADE)
+# """ User might be assigned to a team, this creates a column to store the corresponding information """
+# User.team = models.ForeignKey(Team, on_delete=models.SET_NULL)
+# """ Create column to let courses bind with colleges """
+# Course.college = models.ForeignKey(College, on_delete=models.CASCADE)
