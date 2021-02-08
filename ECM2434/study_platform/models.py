@@ -11,7 +11,12 @@ from django.utils.translation import gettext_lazy as _
 
 
 class Course(models.Model):
+    def __init__(self, *args, **kwargs):
+        super().__init__(args, kwargs)
+        self.college = models.ForeignKey(College, on_delete=models.CASCADE)
+
     name = models.CharField(max_length=20)
+    college = None
 
 
 class User(models.Model):
@@ -21,6 +26,11 @@ class User(models.Model):
         ADMIN = "ADM", _("Admin")
         WELFARE = "WEL", _("Welfare")
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(args, kwargs)
+        self.team = models.ForeignKey(Team, on_delete=models.SET_NULL)
+    team = None
+    date_of_birth = models.DateField()
     password = models.CharField()
     full_name = models.CharField(max_length=20)
     email = models.EmailField(max_length=320)
