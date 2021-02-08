@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="../study_platform/static/bs5/bootstrap.css" />
+    <link href='https://fonts.googleapis.com/css?family=Comfortaa' rel='stylesheet'>
+
     <title>Login</title>
 
     <style>
@@ -21,11 +23,20 @@
             -ms-transform: translateX(-50%);
             transform: translateX(-50%);
         }
+        .background {
+                background: linear-gradient(to bottom, #eeaeca 0%, #94bbe9 100%);
+            }
+        .fill { 
+            min-height: 100%;
+            height: 100%;
+        }
+        body {
+            font-family: 'Comfortaa';font-size: 22px;
+        }
     </style>
 </head>
 <body>
-
-    <div class = "center d-flex">
+    <div class = "container-fluid fill center d-flex justify-content-center align-items-center background">
                 <form action="profile.html" >
                     <div class="row"> 
                         <h1 class="display-1 text-center">Login</h1> 
@@ -50,7 +61,7 @@
                     <br>
 
                     <div class="row">
-                        <p>Not registered? Register <a href=register.html> here </a> </p>
+                        <p class="text-center">Not registered? Register <a href=register.html> here </a> </p>
                     </div>
                 </form>
     </div>
