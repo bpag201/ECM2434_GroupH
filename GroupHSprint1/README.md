@@ -1,26 +1,26 @@
 # Welcome to the Exeter Orienteering Project
 
-### Group Z
+### Group H
 ___
 
 The group members are:
 
-1. Person 1
-2. Person 2
-3. Person 3
-4. Person 4
-5. Person 5
-6. Person 6
+1. Annabelle Moore
+2. Bethany Griffin
+3. Cheng Zhu
+4. Clair Newton
+5. Georgina Huang
+6. Harry Wang
 
 
 This is a submission for Sprint 1. There are three types of document that you will find the following places.
 
 ## PROCESS DOCUMENTS
-Our process documents are managed in the trello platform. The link to our project page is below. We (specific username that added) have added mattcollison2 to the board so it is visible.
+Our process documents are managed in the JetBrains Space application. The link to the project page is below.
 
-trello link: [https://trello.com/exeter-orienteering]
+Space link: [https://ecm2434.jetbrains.space/p/hello-world/issues-board/376vrb4NJ4M5/26PyCz0CQ2rx]
 
-We have also taken regular snapshots of the kanban board in trello to archive our progress. These are held in the repository below.
+We have also taken regular snapshots of the kanban board in Space to archive our progress. These are held in the repository below.
 
 [./process-documents/kanban-snapshot/](./process-documents/kanban-snapshot/)
 
@@ -32,7 +32,7 @@ Within process documents we have also included the meeting notes, agenda and min
 ## TECHNICAL DOCUMENTS
 Our technical documents are primarily managed on the github system. The link to the project is below:
 
-github link: [https://github.com/user12863434/exeter-orienteering]
+github link: [https://github.com/bpag201/ECM2434_GroupH]
 
 We have also include the versioned source code for archiving.
 
