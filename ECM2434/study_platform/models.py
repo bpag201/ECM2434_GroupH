@@ -21,7 +21,8 @@ class User(models.Model):
         ADMIN = "ADM", _("Admin")
         WELFARE = "WEL", _("Welfare")
 
-    password = models.CharField()
+
+    password = models.CharField(max_length=20)
     full_name = models.CharField(max_length=20)
     email = models.EmailField(max_length=320)
     nickname = models.CharField(max_length=20)
@@ -67,11 +68,11 @@ class Blog(models.Model):
         STUDYNOTE = "STN", _("Study Note")
 
     post_to = models.ForeignKey(College, on_delete=models.CASCADE)
-    title = models.CharField()
-    category = models.CharField(max_length=3, choices=Categories, default=Categories.STUDYNOTE)
+    title = models.CharField(max_length=20)
+    category = models.CharField(max_length=3, choices=Categories.choices, default=Categories.STUDYNOTE)
     content = models.TextField()
-    author = models.ForeignKey(User, on_delete=models.SET_NULL)  # If we allow multiple participants then don't use this
-    participants = models.ManyToManyField(User)                  # Well ...
+    #author = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name="author")  # If we allow multiple participants then don't use this
+    participants = models.ManyToManyField(User)                       # Well ...
     updated_on = models.DateTimeField(auto_now=True)
     created_on = models.DateTimeField(auto_now_add=True)
     upvotes = models.IntegerField()
@@ -84,11 +85,11 @@ class Blog(models.Model):
 
 
 class TeamBlog(models.Model):
-    title = models.CharField()
+    title = models.CharField(max_length=20)
     content = models.TextField()
-    author = models.ForeignKey(User, on_delete=models.SET_NULL)  # If we allow multiple participants then don't use this
+    #author = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)  # If we allow multiple participants then don't use this
     participants = models.ManyToManyField(User)                  # Well ...
-    team = models.ForeignKey(Team, on_delete=models.SET_NULL)
+    team = models.ForeignKey(Team, null=True, on_delete=models.SET_NULL)
     updated_on = models.DateTimeField(auto_now=True)
     created_on = models.DateTimeField(auto_now_add=True)
 
@@ -97,15 +98,15 @@ class TeamBlog(models.Model):
 
 
 class Comment(models.Model):
-    author = models.ForeignKey(User, on_delete=models.SET_NULL)
+    author = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     content = models.TextField()
     created_on = models.DateTimeField(auto_now=True)
 
 
 class Quiz(models.Model):
     is_welfare = models.BooleanField()
-    id = models.CharField(max_length=50)
-    author = models.ForeignKey(User, on_delete=models.SET_NULL)
+    id = models.CharField(max_length=50, primary_key=True)
+    author = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     created_on = models.DateTimeField(auto_now=True)
 
     def __str__(self):
@@ -120,8 +121,8 @@ class Question(models.Model):
         MULTIPLE_CHOICE = "MUL", _("Multiple Choice")
         FILL_BLANK = "FIB", _("Fill Blank")
 
-    category = models.CharField(max_length=3, choices=Categories)
-    course = models.ForeignKey(Course, on_delete=models.SET_NULL)
+    category = models.CharField(max_length=3, choices=Categories.choices)
+    course = models.ForeignKey(Course, null=True, on_delete=models.SET_NULL)
     content = models.TextField()
     answer = models.TextField()
 
@@ -134,14 +135,14 @@ class WelfareResult(models.Model):
     date = models.DateTimeField(auto_now=True)
     percentage = models.IntegerField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    quiz = models.ForeignKey(Quiz, on_delete=models.SET_NULL)
+    quiz = models.ForeignKey(Quiz, null=True, on_delete=models.SET_NULL)
 
 
 """ This only contains achievements users have, not all possibilities """
 
 
 class Achievement(models.Model):
-    name = models.CharField()
+    name = models.CharField(max_length=20)
     description = models.TextField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
@@ -161,12 +162,12 @@ class Reward(models.Model):
         BLIND = "BLN", _("Blind")
         BOOST = "BST", _("Boost")
 
-    name = models.CharField()
+    name = models.CharField(max_length=20)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     is_tool = models.BooleanField()
     description = models.TextField()
     # has_mods -> I don't think we need this as we only need to bind mods to a reward
-    effect = models.CharField(max_length=3, choices=Effect, default=Effect.EMPTY)
+    effect = models.CharField(max_length=3, choices=Effect.choices, default=Effect.EMPTY)
     graphic = models.ImageField()
 
     def __str__(self):
@@ -174,7 +175,7 @@ class Reward(models.Model):
 
 
 class Accessory(models.Model):
-    name = models.CharField()
+    name = models.CharField(max_length=100)
     description = models.TextField()
     graphic = models.ImageField()
     has_mods = models.BooleanField()
@@ -185,9 +186,9 @@ class Accessory(models.Model):
 
 
 class Mod(models.Model):
-    name = models.CharField()
+    name = models.CharField(max_length=20)
     description = models.TextField()
-    effect = models.CharField()  # Assuming effects can be applied by changing some parameters. 
+    effect = models.CharField(max_length=20)  # Assuming effects can be applied by changing some parameters. 
     accessory = models.ForeignKey(Accessory, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -203,11 +204,11 @@ class UserTitle(models.Model):
     
     
 class QuizTag():
-    content = models.CharField()
+    content = models.CharField(max_length=20)
     quiz = models.ForeignKey(Quiz,on_delete=models.CASCADE)
 
 
 """ User might be assigned to a team, this creates a column to store the corresponding information """
-User.team = models.ForeignKey(Team, on_delete=models.SET_NULL)
+User.team = models.ForeignKey(Team, null=True, on_delete=models.SET_NULL)
 """ Create column to let courses bind with colleges """
 Course.college = models.ForeignKey(College, on_delete=models.CASCADE)

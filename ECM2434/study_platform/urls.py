@@ -4,6 +4,5 @@ from . import forms
 
 app_name = 'study_platform'
 urlpatterns = [
-    path('register/', forms.register, name='register')
+    path('templates/register', forms.register, name='register')
 ]
-
