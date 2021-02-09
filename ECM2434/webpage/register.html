@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="../study_platform/static/bs5/bootstrap.css" />
+    <link href='https://fonts.googleapis.com/css?family=Comfortaa' rel='stylesheet'>
+
     <title>Register</title>
 
     <style>
@@ -21,11 +23,20 @@
             -ms-transform: translateX(-50%);
             transform: translateX(-50%);
         }
+        .background {
+                background: linear-gradient(to bottom, #eeaeca 0%, #94bbe9 100%);
+            }
+        .fill { 
+            min-height: 100%;
+            height: 100%;
+        }
+        body {
+            font-family: 'Comfortaa';font-size: 22px;
+        }
     </style>
 </head>
 <body>
-
-    <div class = "center d-flex">
+    <div class = "container-fluid fill center d-flex justify-content-center align-items-center background">
                 <form action="profile.html" >
                     <div class="row"> 
                         <h1 class="display-1 text-center">Register</h1> 
@@ -38,19 +49,20 @@
                     <br>
 
                     <div class="row">
-                        <input type="text" name="password" placeholder="Password">
+                        <input type="password" name="password" placeholder="Password">
                     </div>
                     <br>
 
                     <div class="row">
-                        <div class="d-grid gap-2 col-4 mx-auto">
-                            <button type="submit" size="10" class="btn btn-primary btn-lg">Login</button>
+                        <div class="d-grid gap-2 col-6 mx-auto">
+                            <button type="submit" size="10" class="btn btn-primary btn-lg">Register</button>
+                            <a href="homepage.html" class="btn btn-primary btn-lg">Cancel</a>
                         </div>
                     </div>
                     <br>
 
                     <div class="row">
-                        <p>Already registered? Login <a href=login.html> here </a> </p>
+                        <p class="text-center">Already registered? Login <a href=login.html> here </a> </p>
                     </div>
                 </form>
     </div>
