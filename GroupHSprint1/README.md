@@ -1,4 +1,4 @@
-# Welcome to the Exeter Orienteering Project
+# Welcome to the ...
 
 ### Group H
 ___
