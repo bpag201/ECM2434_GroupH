@@ -26,3 +26,6 @@ def register_view(request):
 def login_view(request):
     form = AuthenticationForm()
     return render(request, "login.html", {'form':form})
+
+def home_view(request):
+    return render(request, "homepage.html")
