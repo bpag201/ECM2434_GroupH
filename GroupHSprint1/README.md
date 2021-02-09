@@ -22,7 +22,7 @@ Space link: [https://ecm2434.jetbrains.space/p/hello-world/issues-board/376vrb4N
 
 We have also taken regular snapshots of the kanban board in Space to archive our progress. These are held in the repository below.
 
-[./process-documents/kanban-snapshot/](./process-documents/kanban-snapshot/)
+[./process-documents/kanban-snapshots/](./process-documents/kanban-snapshots)
 
 Within process documents we have also included the meeting notes, agenda and minutes. These will be found in the repository below.
 
