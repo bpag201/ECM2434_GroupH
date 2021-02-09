@@ -4,6 +4,7 @@ from . import forms
 
 app_name = 'study_platform'
 urlpatterns = [
-    path('', views.home_view, name='home'),
-    path('login', views.home_view, name='login')
+    path('', views.register_view, name='register'),           #Will be changed to home page when made
+    path('register/', views.register_view, name='register'),
+    path('login/', views.login_view, name='login')
 ]

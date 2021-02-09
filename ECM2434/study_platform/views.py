@@ -1,10 +1,10 @@
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.shortcuts import render, redirect
 
 # Create your views here.
-def home_view(request):
+def register_view(request):
     if request.method == 'POST':
         print("a")
         form = UserCreationForm(request.POST)
@@ -20,4 +20,9 @@ def home_view(request):
         print("c")
         form = UserCreationForm()
     print("d")
-    return render(request, "register.html")
+    return render(request, "register.html", {'form':form})
+
+
+def login_view(request):
+    form = AuthenticationForm()
+    return render(request, "login.html", {'form':form})
