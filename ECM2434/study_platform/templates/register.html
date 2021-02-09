@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="../study_platform/static/bs5/bootstrap.css" />
+    <link rel="stylesheet" href="../static/bs5/bootstrap.css" />
     <title>Register</title>
 
     <style>
@@ -26,7 +26,7 @@
 <body>
 
     <div class = "center d-flex">
-                <form method="post" action="../forms.py" >
+                <form method="POST"> {% csrf_token %}
                     <div class="row"> 
                         <h1 class="display-1 text-center">Register</h1> 
                     </div>
@@ -56,6 +56,6 @@
     </div>
 
     
-   </script> <script src="../study_platform/static/bs5/bootstrap.js"></script>
+   </script> <script src="../static/bs5/bootstrap.js"></script>
 </body>
 </html>
