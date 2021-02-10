@@ -4,4 +4,4 @@ frontend:
 
 #Design
 design:
-= ./*.png
+= ./**/*.png
