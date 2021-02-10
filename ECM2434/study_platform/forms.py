@@ -1,6 +1,8 @@
 from django import forms
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
+from django.contrib.auth import get_user_model
+
 
 
 class RegisterForm(forms.Form):
@@ -25,3 +27,6 @@ def register(request):
                   'template/profile.html',
                   {'form': form, 'submitted': submitted}
                   )
+
+
+User = get_user_model()

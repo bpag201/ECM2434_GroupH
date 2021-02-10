@@ -1,5 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth import get_user_model
 
 """ One thing I'm not sure: I don't know if it's appropriate to use auto_now / auto_now_add options in the 
     DateTimeFields, if someone could check if I used these options correctly it will be great. Thanks."""
@@ -14,16 +16,17 @@ class Course(models.Model):
     name = models.CharField(max_length=20)
 
 
-class User(models.Model):
+class User(AbstractBaseUser):
     class Tiers(models.TextChoices):
         STUDENT = "STU", _("Student")
         STAFF = "STF", _("Staff")
         ADMIN = "ADM", _("Admin")
         WELFARE = "WEL", _("Welfare")
 
-
-    password = models.CharField(max_length=20)
-    full_name = models.CharField(max_length=20)
+    identifier = models.CharField(max_length=64, unique=True)
+    USERNAME_FIELD = 'identifier'
+    first_name = models.CharField(max_length=20)
+    last_name = models.CharField(max_length=20)
     email = models.EmailField(max_length=320)
     nickname = models.CharField(max_length=20)
     course = models.ForeignKey(Course, on_delete=models.PROTECT)
@@ -35,6 +38,7 @@ class User(models.Model):
         choices=Tiers.choices,
         default=Tiers.STUDENT
     )
+    REQUIRED_FIELD = ['full_name', 'email', 'nickname', 'course', 'user_tier']
 
     # inventory: I plan to implement inventory by calling the user.reward_set.all() function which returns all related
     # loots
@@ -212,3 +216,7 @@ class QuizTag():
 User.team = models.ForeignKey(Team, null=True, on_delete=models.SET_NULL)
 """ Create column to let courses bind with colleges """
 Course.college = models.ForeignKey(College, on_delete=models.CASCADE)
+
+# Shouldn't reference User directly so we use this instead
+User = get_user_model()
+

@@ -84,6 +84,9 @@ DATABASES = {
     }
 }
 
+# Setting where users are authenticated from
+AUTH_USER_MODEL = 'study_platform.User'
+
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
