@@ -1,7 +1,9 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import User, AbstractBaseUser, BaseUserManager
 from django.contrib.auth import get_user_model
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 """ One thing I'm not sure: I don't know if it's appropriate to use auto_now / auto_now_add options in the 
     DateTimeFields, if someone could check if I used these options correctly it will be great. Thanks."""
@@ -16,18 +18,13 @@ class Course(models.Model):
     name = models.CharField(max_length=20)
 
 
-class User(AbstractBaseUser):
+class UserProfile(models.Model):
     class Tiers(models.TextChoices):
         STUDENT = "STU", _("Student")
         STAFF = "STF", _("Staff")
         ADMIN = "ADM", _("Admin")
         WELFARE = "WEL", _("Welfare")
-
-    identifier = models.CharField(max_length=64, unique=True)
-    USERNAME_FIELD = 'identifier'
-    first_name = models.CharField(max_length=20)
-    last_name = models.CharField(max_length=20)
-    email = models.EmailField(max_length=320)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     nickname = models.CharField(max_length=20)
     course = models.ForeignKey(Course, on_delete=models.PROTECT)
     score = models.IntegerField()
@@ -40,6 +37,7 @@ class User(AbstractBaseUser):
     )
     REQUIRED_FIELD = ['full_name', 'email', 'nickname', 'course', 'user_tier']
 
+   
     # inventory: I plan to implement inventory by calling the user.reward_set.all() function which returns all related
     # loots
 
@@ -49,7 +47,7 @@ class User(AbstractBaseUser):
 
 class Team(models.Model):
     name = models.CharField(max_length=20)
-    manager = models.ForeignKey(User, on_delete=models.PROTECT)
+    manager = models.ForeignKey(UserProfile, on_delete=models.PROTECT)
 
     def __str__(self):
         return self.name
@@ -76,7 +74,7 @@ class Blog(models.Model):
     category = models.CharField(max_length=3, choices=Categories.choices, default=Categories.STUDYNOTE)
     content = models.TextField()
     #author = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name="author")  # If we allow multiple participants then don't use this
-    participants = models.ManyToManyField(User)                       # Well ...
+    participants = models.ManyToManyField(UserProfile)                       # Well ...
     updated_on = models.DateTimeField(auto_now=True)
     created_on = models.DateTimeField(auto_now_add=True)
     upvotes = models.IntegerField()
@@ -92,7 +90,7 @@ class TeamBlog(models.Model):
     title = models.CharField(max_length=20)
     content = models.TextField()
     #author = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)  # If we allow multiple participants then don't use this
-    participants = models.ManyToManyField(User)                  # Well ...
+    participants = models.ManyToManyField(UserProfile)                  # Well ...
     team = models.ForeignKey(Team, null=True, on_delete=models.SET_NULL)
     updated_on = models.DateTimeField(auto_now=True)
     created_on = models.DateTimeField(auto_now_add=True)
@@ -102,7 +100,7 @@ class TeamBlog(models.Model):
 
 
 class Comment(models.Model):
-    author = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    author = models.ForeignKey(UserProfile, null=True, on_delete=models.SET_NULL)
     content = models.TextField()
     created_on = models.DateTimeField(auto_now=True)
 
@@ -110,7 +108,7 @@ class Comment(models.Model):
 class Quiz(models.Model):
     is_welfare = models.BooleanField()
     id = models.CharField(max_length=50, primary_key=True)
-    author = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    author = models.ForeignKey(UserProfile, null=True, on_delete=models.SET_NULL)
     created_on = models.DateTimeField(auto_now=True)
 
     def __str__(self):
@@ -138,7 +136,7 @@ class Question(models.Model):
 class WelfareResult(models.Model):
     date = models.DateTimeField(auto_now=True)
     percentage = models.IntegerField()
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     quiz = models.ForeignKey(Quiz, null=True, on_delete=models.SET_NULL)
 
 
@@ -148,7 +146,7 @@ class WelfareResult(models.Model):
 class Achievement(models.Model):
     name = models.CharField(max_length=20)
     description = models.TextField()
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -167,7 +165,7 @@ class Reward(models.Model):
         BOOST = "BST", _("Boost")
 
     name = models.CharField(max_length=20)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     is_tool = models.BooleanField()
     description = models.TextField()
     # has_mods -> I don't think we need this as we only need to bind mods to a reward
@@ -201,7 +199,7 @@ class Mod(models.Model):
     
 class UserTitle(models.Model):
     content = models.CharField(max_length=20)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.content
@@ -213,10 +211,10 @@ class QuizTag():
 
 
 """ User might be assigned to a team, this creates a column to store the corresponding information """
-User.team = models.ForeignKey(Team, null=True, on_delete=models.SET_NULL)
+UserProfile.team = models.ForeignKey(Team, null=True, on_delete=models.SET_NULL)
 """ Create column to let courses bind with colleges """
 Course.college = models.ForeignKey(College, on_delete=models.CASCADE)
 
 # Shouldn't reference User directly so we use this instead
-User = get_user_model()
+# User = get_user_model()
 
