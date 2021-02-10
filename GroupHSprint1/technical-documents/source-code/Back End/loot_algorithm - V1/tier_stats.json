@@ -1,0 +1,17 @@
+{
+    "common": {
+        "probability": 0.7
+    },
+    "uncommon": {
+        "probability": 0.2,
+        "guarantee": 5
+    },
+    "rare": {
+        "probability": 0.08,
+        "guarantee": 13
+    },
+    "legendary": {
+        "probability": 0.02,
+        "guarantee": 50
+    }
+}
