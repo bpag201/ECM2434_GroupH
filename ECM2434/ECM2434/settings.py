@@ -78,7 +78,10 @@ DATABASES = {
         'NAME': 'project',
         'USER': 'root',
         'PASSWORD': 'grouph',
+        # used on remote
         'HOST': '192.248.164.28',
+        # used on server
+        # 'HOST': '127.0.0.1',
         'PORT': '3306',
 
     }
