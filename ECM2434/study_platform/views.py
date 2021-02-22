@@ -18,8 +18,8 @@ def user_profile_self(request):
         'real_name': cur_user.full_name,
         'nick_name': cur_user.nickname,
         'email': cur_user.email,
-        'college': cur_user.course.college,
-        'dob': cur_user.date_of_birth,
+        'course': cur_user.course,
+        'DOB': cur_user.date_of_birth,
         'resource': cur_user.resource,
         'achievement': cur_user.achievement_set.all(),
         'team': cur_user.team,  # can a user join more than one team?
