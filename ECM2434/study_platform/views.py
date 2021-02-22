@@ -23,5 +23,6 @@ def user_profile_self(request):
         'resource': cur_user.resource,
         'achievement': cur_user.achievement_set.all(),
         'team': cur_user.team,  # can a user join more than one team?
+        'user_tier': cur_user.user_tier.label  # maybe wrong value
     }
     return render(request, 'dummy.html', pars)  # change dummy.html to the target web page
