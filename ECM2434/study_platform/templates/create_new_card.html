@@ -2,25 +2,8 @@
 <html lang="en">
 <head>
     {% load static %}
-{#    <link rel="{% static 'bs5/images/fav_icon.ico' %}">#}
     <script src="https://kit.fontawesome.com/3afd3220e7.js" crossorigin="anonymous"></script>
     <meta charset="UTF-8">
-        <style>
-        [class*="col"]{
-            padding: 1rem;
-            background-color:#d3d3d4;
-            border: 2px solid #ffffff;
-            color: black;
-            text-align: center;
-        }
-        [class*="con"]{
-            padding: 1rem;
-            background-color: white;
-            border: 2px solid white;
-            color: white;
-            text-align: center;
-        }
-    </style>
 
     <link rel="stylesheet" type="text/css" href="{% static 'bs5/bootstrap.css' %}">
     <title>Design Card</title>
@@ -35,7 +18,7 @@
    min-height: 100vh;">
       <div class="row">
           <div class="col">
-              <div class="card my-3">
+              <div class="shadow card my-3">
                   <div class="card-body">
                       <form method="post" target=""> <!-- change target to backend url -->
                           <label for="question">Question: </label>
