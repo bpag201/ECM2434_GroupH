@@ -29,39 +29,77 @@
 <body>
 
 
-<div class="container">
+<div class="container-md">
     <div class="row">
         <div class="col-md-4">
-            < img src="{% static 'BootstrapPractice/images/bex3.jpg' %}" alt="" class="img-fluid rounded-circle" style="height:200px; width: 200px; border-bottom: 8px">
-            <p>Show selected title here</p >
-            <h1> Full Name </h1><br>
+            <img src="{% static 'BootstrapPractice/images/bex3.jpg' %}" alt="" class="img-fluid rounded-circle" style="height:200px; width: 200px; border-bottom: 8px">
+            <p>Show selected title here</p>
+            <h1> {{real_name}} </h1><br>
             <small>User Tier:</small>
-            <small> Data</small>
+            <small> {{user_tier}} </small>
             <div class="row" >
                 <div class="col-4">
-                    <p>DOB: </p >
+                    <p>DOB: </p>
                 </div>
                 <div class="col-8" >
-                    <p>Data</p >
+                    <p>{{DOB}}</p>
                 </div>
             </div>
             <div class="row" >
                 <div class="col-4">
-                    <p>Nickname: </p >
+                    <p>User name: </p>
                 </div>
                 <div class="col-8">
-                    <p>Data</p >
+                    <p>{{nick_name}}</p>
                 </div>
             </div>
             <div class="row">
                 <div class="col-4">
-                    <p>Email: </p >
+                    <p>Email: </p>
                 </div>
                 <div class="col-8">
-                    <p>Data</p >
+                    <p>{{email}}</p>
                 </div>
             </div>
             <div class="row">
                 <div class="col-4">
-                    <p>Course: </p >
+                    <p>Course: </p>
                 </div>
+                <div class="col-8">
+                    <p>{{course}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card my-3">
+                <div class="card-body">
+                    <h6 class="card-title"><i class="fab fa-angellist"></i>Resource</h6>
+                    <p class="card-text">{{resource}}</p>
+                </div>
+            </div>
+            <div class="card my-3">
+                <div class="card-body">
+                    <h6 class="card-title"><i class="fab fa-angellist"></i>Achievement</h6>
+                    <ul class="list-group list-group-flush">
+                        {% for x in achievement%}
+                        <li class="list-group-item"><p>{{x}}</p></li>
+                        {% endfor%}
+                    </ul>
+                </div>
+            </div>
+            <div class="card my-3">
+                <div class="card-body">
+                    <h6 class="card-title"><i class="fab fa-angellist"></i>Team</h6>
+                    <p class="card-text">{{team}}</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+  <script src="https://unpkg.com/@popperjs/core@2.4.0/dist/umd/popper.min.js"></script>
+  <script src="{% static 'BootstrapPractice/bootstrap.js' %}"></script>
+
+</body>
+</html>
