@@ -28,24 +28,24 @@
       </div>
       <div style="display: none" id="cards">
         <div class="row my-5">
-          {% for i in "012345" %}
+          {% for i in "012345" %} <!-- TODO: get the list from the server -->
             <div class="col-2">
               <div class="card flip-card effect-on-active" style='width: 8rem; height: 16rem;'>
-                <div class="card-body front" style='background-size: 8rem 16rem; background-image: url("{% static 'bs5/images/Card_Back.png' %}")'>
+                <div class="card-body front" style='background-size: 8rem 16rem; background-image: url("{% static 'images/Card_Back.png' %}")'>
                 </div>
-                <div class="card-body back" style='background-size: 8rem 16rem; background-image: url("{% static 'bs5/images/SampleImage.jpg' %}")'>
+                <div class="card-body back" style='background-size: 8rem 16rem; background-image: url("{% static 'images/SampleImage.jpg' %}")'>
                 </div>
               </div>
             </div>
           {% endfor %}
         </div>
         <div class="row my-5">
-          {% for i in "6789AB" %}
+          {% for i in "6789AB" %}  <!-- TODO: get the list from the server -->
             <div class="col-2">
               <div class="card flip-card effect-on-active" style='width: 8rem; height: 16rem;'>
-                <div class="card-body front" style='background-size: 8rem 16rem; background-image: url("{% static 'bs5/images/Card_Back.png' %}")'>
+                <div class="card-body front" style='background-size: 8rem 16rem; background-image: url("{% static 'images/Card_Back.png' %}")'>
                 </div>
-                <div class="card-body back" style='background-size: 8rem 16rem; background-image: url("{% static 'bs5/images/SampleImage.jpg' %}")'>
+                <div class="card-body back" style='background-size: 8rem 16rem; background-image: url("{% static 'images/SampleImage.jpg' %}")'>
                 </div>
               </div>
             </div>
