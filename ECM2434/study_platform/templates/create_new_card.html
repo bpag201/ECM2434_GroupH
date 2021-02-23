@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <script src="https://kit.fontawesome.com/3afd3220e7.js" crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+
+    <link rel="stylesheet" type="text/css" href="{% static 'bs5/bootstrap.css' %}">
+    <title>Design Card</title>
+</head>
+<body>
+  <div class="container" style="
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+   text-align: left;
+   min-height: 100vh;">
+      <div class="row">
+          <div class="col">
+              <div class="shadow card my-3">
+                  <div class="card-body">
+                      <form method="post" target=""> <!-- change target to backend url -->
+                          <label for="question">Question: </label>
+                          <input class="form-control" type="text" name="question" id="question"><br>
+                          <label for="correct_answer">Correct Answer: </label>
+                          <input class="form-control" type="text" name="correct_answer" id="correct_answer"><br>
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" onclick="display()" value="1" name="isMultipleChoice" id="isMultipleChoice">
+                            <label class="form-check-label" for="isMultipleChoice">Is this card a multiple choice question?</label>
+                          </div>
+                          <hr>
+                          <div id="alternatives" style="display: none">
+                              <label for="alternative1">Answer2: </label>
+                              <input class="form-control" type="text" name="alternative1" id="alternative1"><br>
+                              <label for="alternative2">Answer3: </label>
+                              <input class="form-control" type="text" name="alternative2" id="alternative2"><br>
+                              <label for="alternative3">Answer4: </label>
+                              <input class="form-control" type="text" name="alternative3" id="alternative3"><br>
+                          </div>
+                          <button class="btn btn-secondary" type="submit">Create</button>
+                          <script>
+                              function display(){
+                                  let x = document.getElementById("alternatives");
+                                  if (x.style.display === "none") {
+                                      x.style.display = "block";
+                                  } else {
+                                      x.style.display = "none";
+                                  }
+                              }
+                          </script>
+                      </form>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</body>
+</html>

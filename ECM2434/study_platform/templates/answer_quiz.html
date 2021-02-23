@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <script src="https://kit.fontawesome.com/3afd3220e7.js" crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="{% static 'bs5/bootstrap.css' %}">
+    <title>Quiz</title>
+</head>
+<body>
+  <div class="container" style="
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+   text-align: left;
+   min-height: 100vh;">
+    <div class="row">
+      <div class="col">
+        <form method="post" target=""> <!-- change target to backend url -->
+          <ul class="shadow list-group my-3">
+            <!-- {/{for question in question_list}} -->
+            <li class="list-group-item">
+              <div class="card my-3" style="width: 30rem">
+                <div class="card-body">
+                  <div class="card-title">
+                    <h6><b>Question Number</b></h6>
+                  </div>
+                  <p class="card-text">Question Text</p><br>
+                  <input type="hidden" name="index" value=""><!-- value = {\{ question.index }} -->
+                  <div class="form-check">
+                    <label for="answer1">Answer 1</label> <!-- change Answer 1 to variable -->
+                    <input class="form-check-input" type="radio" name="answer" id="answer1">
+                  </div>
+                  <div class="form-check">
+                    <label for="answer2">Answer 2</label> <!-- change Answer 2 to variable -->
+                    <input class="form-check-input" type="radio" name="answer" id="answer2">
+                  </div>
+                  <div class="form-check">
+                    <label for="answer3">Answer 3</label> <!-- change Answer 3 to variable -->
+                    <input class="form-check-input" type="radio" name="answer" id="answer3">
+                  </div>
+                  <div class="form-check">
+                    <label for="answer4">Answer 4</label> <!-- change Answer 4 to variable -->
+                    <input class="form-check-input" type="radio" name="answer" id="answer4">
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+          <button type="submit" class="btn btn-secondary">Confirm</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
