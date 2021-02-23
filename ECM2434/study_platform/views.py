@@ -62,4 +62,8 @@ def home_view(request):
 
 
 def profile_view(request):
-    return render(request, "profile.html")
+    return render(request, "profile_me.html")
+
+
+def shop(request):
+    return render(request, 'shop.html')
