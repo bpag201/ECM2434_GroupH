@@ -1,7 +1,0 @@
-#Front end
-frontend:
-- ./*.js
-
-#Design
-design:
-= ./**/*.png

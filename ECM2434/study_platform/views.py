@@ -1,8 +1,67 @@
-from django.shortcuts import render, get_object_or_404
-from .models import User
+from django.http import HttpResponse
+from django.contrib import messages
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.shortcuts import render, redirect
+from django.contrib.auth import get_user_model
 
 
-def user_profile_self(request):
+# Create your views here.
+def register_view(request):
+    if request.method == 'POST':
+        print("a")
+        form = UserCreationForm(data=request.POST)
+        print(request.POST)
+        print(form.is_valid())
+        if form.is_valid():
+            print("b")
+            form.save()
+            print("save")
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            print(username)
+            print(raw_password)
+            user = authenticate(username=username, password=raw_password)
+            print("authenticated")
+            login(request, user)
+            print("logged in")
+            return redirect('/profile')
+    else:
+        print("c")
+        form = UserCreationForm()
+    print("d")
+    return render(request, "register.html", {'form':form})
+
+
+def login_view(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(request=request, data=request.POST)
+        if form.is_valid():
+            print("form valid")
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                print("logged in")
+                #messages.info(request, f"You are now logged in as {username}")
+                print("blast off")
+                return redirect('/profile')
+            else:
+                messages.error(request, "Invalid username or password")
+        else:
+            print("form invalid")
+            messages.error(request, "Invalid username or password")
+
+    form = AuthenticationForm()
+    return render(request, "login.html", {'form':form})
+
+
+def home_view(request):
+    return render(request, "homepage.html")
+
+
+def profile_view(request):
     """
     input: this page is designed to be redirected by a dash-board page, which stores the current user's login credential
     in session as 'user_login_name' (at the time I'm writing this code I assume we use the full_name in User model as
@@ -25,4 +84,8 @@ def user_profile_self(request):
         'team': cur_user.team,  # can a user join more than one team?
         'user_tier': cur_user.user_tier.label  # maybe wrong value
     }
-    return render(request, 'dummy.html', pars)  # change dummy.html to the target web page
+    return render(request, "profile_me.html", pars)
+
+
+def shop(request):
+    return render(request, 'shop.html')
