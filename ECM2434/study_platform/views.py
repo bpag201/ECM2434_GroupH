@@ -7,6 +7,8 @@ from django.contrib.auth import get_user_model
 
 
 # Create your views here.
+from .forms import User
+
 def register_view(request):
     if request.method == 'POST':
         print("a")
@@ -89,3 +91,11 @@ def profile_view(request):
 
 def shop(request):
     return render(request, 'shop.html')
+
+
+def create_card(request):
+    return render(request, 'create_new_card.html')
+
+
+def answer_quiz(request):
+    return render(request, 'answer_quiz.html')
