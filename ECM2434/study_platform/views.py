@@ -7,6 +7,10 @@ from django.contrib.auth import get_user_model
 
 
 # Create your views here.
+'''
+    This is the view used to authenticate and create a new user when they register. If the registration is authenticated
+    then the user is logged in and taken to their profile page.
+'''
 def register_view(request):
     if request.method == 'POST':
         print("a")
@@ -32,7 +36,10 @@ def register_view(request):
     print("d")
     return render(request, "register.html", {'form':form})
 
-
+'''
+    This view is used to authenticate and log in a user. If login is authenticated then it takes them directly to their
+    profile page
+'''
 def login_view(request):
     if request.method == 'POST':
         form = AuthenticationForm(request=request, data=request.POST)
@@ -56,7 +63,9 @@ def login_view(request):
     form = AuthenticationForm()
     return render(request, "login.html", {'form':form})
 
-
+'''
+    Simply takes the user to the homepage.
+'''
 def home_view(request):
     return render(request, "homepage.html")
 
