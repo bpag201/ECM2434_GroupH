@@ -4,6 +4,7 @@ from django.contrib.auth.models import User, AbstractBaseUser, BaseUserManager
 from django.contrib.auth import get_user_model
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+import uuid
 
 """ One thing I'm not sure: I don't know if it's appropriate to use auto_now / auto_now_add options in the 
     DateTimeFields, if someone could check if I used these options correctly it will be great. Thanks."""
