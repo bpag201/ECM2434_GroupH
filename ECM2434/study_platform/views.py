@@ -137,6 +137,10 @@ def answer_quiz(request):
     return render(request, 'answer_quiz.html')
 
 
+def flash_card(request):
+    return render(request, 'flash_card.html')
+
+
 """ In order to implement pagination on the web page, several testing data is added to this function """
 
 
