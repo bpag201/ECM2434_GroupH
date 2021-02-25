@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <script src="https://kit.fontawesome.com/3afd3220e7.js" crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.metroui.org.ua/v4/css/metro-all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'bs5/bootstrap.css' %}">
+    <title>Quiz Feedback</title>
+</head>
+<body>
+  <div class="container" style="
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+   text-align: left;
+   min-height: 100vh;">
+      <div class="row">
+          <div class="col">
+              <div id="question_card" class="card flip-card effect-on-active flip-horizontal" style="width: 40rem; min-height: 20rem">
+                  <div class="card-body front">
+                    <h1 class="card-title">Question</h1>
+                    <p class="card-text fs-4">Question Text</p>
+                  </div>
+                <div class="card-body back">
+                    <h1 class="card-title">Answer</h1>
+                    <p class="card-text fs-4">Answer Text</p>
+                  </div>
+              </div>
+          </div>
+      </div>
+    <div class="row">
+      <div class="col">
+        <a role="button" id="prevQuestion">
+          <i class="fas fa-angle-left"></i>
+        </a>
+      </div>
+      <div class="col">
+        <small id="cur_index"></small><small>/</small><small id="quiz_size"></small>
+      </div>
+      <div class="col">
+        <a role="button" id="nextQuestion">
+          <i class="fas fa-angle-right"></i>
+        </a>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col" style="width: 39rem">
+        <h2>Comment:</h2>
+      </div>
+    </div>
+    <!-- TODO: for each comment in the list -->
+    <div class="row">
+          <div class="col">
+              <div class="card comment" style="width: 40rem;">
+                  <div class="card-body">
+                    <h3 class="card-title">User</h3>
+                    <p class="card-text fs-5">Comment Text</p>
+                  </div>
+              </div>
+          </div>
+      </div>
+    <div class="row">
+          <div class="col">
+              <div class="card comment" style="width: 40rem;">
+                  <div class="card-body">
+                    <h3 class="card-title">User</h3>
+                    <p class="card-text fs-5">Comment Text</p>
+                  </div>
+              </div>
+          </div>
+      </div>
+    <!-- TODO: end for -->
+    <div class="row">
+      <div class="col">
+        <div class="card" style="width: 40rem">
+          <div class="card-body">
+            <form method="post" id="post_comment">
+              <div class="row">
+                <div class="col">
+                  <label for="txa">Leave a comment:<br></label>
+                <textarea id="txa" rows="6" cols="68" form="post_comment"></textarea>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <button type="submit" class="btn btn-secondary">Send</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <button class="btn btn-secondary">Confirm</button>
+      </div>
+    </div>
+  </div>
+  <script>
+      let currentIndex = 1;
+      let quiz_size = 31;
+      document.getElementById("cur_index").innerHTML = currentIndex;
+      document.getElementById("quiz_size").innerHTML = quiz_size.toString();
+      document.getElementById("question_card").addEventListener('click',function(){this.classList.toggle("active");})
+      document.getElementById("prevQuestion").addEventListener('click',prevQuestion);
+      document.getElementById("nextQuestion").addEventListener('click',nextQuestion);
+      function prevQuestion(){
+          let question_card = document.getElementById("question_card");
+          let comments = document.getElementsByClassName("comment");
+          if(currentIndex > 1 && !question_card.classList.contains("animate__animated")){
+              question_card.classList.add("animate__animated", "animate__fadeInLeft");
+              for(let i=0;i<comments.length;i++){
+                  comments[i].classList.add("animate__animated", "animate__fadeInLeft");
+              }
+              currentIndex -= 1;
+              document.getElementById("cur_index").innerHTML = currentIndex;
+              setTimeout(function (){
+                  question_card.classList.remove("animate__animated", "animate__fadeInLeft");
+                  for(let i=0;i<comments.length;i++){
+                      comments[i].classList.remove("animate__animated", "animate__fadeInLeft");
+                  }
+              },900);
+          }
+      }
+
+      function nextQuestion(){
+          let question_card= document.getElementById("question_card");
+          let comments = document.getElementsByClassName("comment");
+          if(currentIndex < 31 && !question_card.classList.contains("animate__animated")){
+              question_card.classList.add("animate__animated", "animate__fadeInRight");
+              for(let i=0;i<comments.length;i++){
+                  comments[i].classList.add("animate__animated", "animate__fadeInRight");
+              }
+              currentIndex += 1;
+              document.getElementById("cur_index").innerHTML = currentIndex;
+              setTimeout(function(){
+                  question_card.classList.remove("animate__animated", "animate__fadeInRight");
+                  for(let i=0;i<comments.length;i++){
+                      comments[i].classList.remove("animate__animated", "animate__fadeInRight");
+                  }
+              }, 800)
+
+          }
+      }
+  </script>
+</body>
+</html>
