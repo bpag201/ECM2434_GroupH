@@ -1,50 +1,82 @@
-class Card(models.Model):
-    card_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    card_type = models.IntegerField()
-    card_content = models.TextField()
-    card_creator = models.ForeignKey(User, on_delete=models.CASCADE)
-    card_creat_date = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.card_content
+from groupH.models import Collection, Card, Comment, Poster, Option
 
 
-class Option(models.Model):
-    opt_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    opt_cid = models.ForeignKey(Card, on_delete=models.CASCADE)
-    opt_type = models.CharField(max_length=3, default='TXT')  # IMG - image; TXT - text
-    opt_content = models.CharField(max_length=512)
-    opt_isCorrect = models.BooleanField(default=False)
-
-    def __str__(self):
-        return self.opt_content
-
-
-class Collection(models.Model):
-    coll_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    coll_title = models.CharField(max_length=64)
-    coll_description = models.CharField(max_length=512)
-    coll_cards = models.ManyToManyField(Card)
-    coll_creator = models.ForeignKey(User, on_delete=models.CASCADE)
-    coll_creat_date = models.DateTimeField(auto_now_add=True)
-
-
-class Poster(models.Model):
-    post_id = models.UUIDField(primary_key=True, default=uuid.uuid4(), editable=False)
-    post_user = models.ForeignKey(User, on_delete=models.CASCADE)
-    post_tag = models.CharField(max_length=64)
-    post_pin = models.BooleanField(default=False)
-
-    post_title = models.CharField(max_length=64)
-    post_content = models.TextField()
-    post_time = models.DateTimeField(auto_now=True)
+def get_all_cards(collection):
+    """
+    Get a list of all cards in a specified collection
+    :param collection: a Collection instance, or a 32/36-bit length string represent collection id
+    :return: a list of cards, a TypeError or an IndexError
+    """
+    if isinstance(collection, Collection):
+        return list(collection.coll_cards.all())
+    elif isinstance(collection, str):
+        if len(collection.strip('-')) == 32:
+            try:
+                cards = Collection.objects.filter(coll_id=collection)[0].coll_cards.all()
+                return list(cards)
+            except IndexError:
+                return IndexError("[ERROR] Unable to find the corresponding record")
+        else:
+            raise TypeError("[ERROR] Invalid ID Length")
+    else:
+        raise TypeError("[ERROR] Invalid Input")
 
 
-class Comment(models.Model):
-    comt_id = models.UUIDField(primary_key=True, default=uuid.uuid4(), editable=False)
-    comt_user = models.ForeignKey(User, on_delete=models.CASCADE)
-    comt_type = models.CharField(max_length=1)  # C-comment, R-reply, P-post
-    comt_pid = models.CharField(max_length=64)
-    comt_content = models.TextField()
-    comt_time = models.DateTimeField(auto_now=True)
-    comt_like = models.IntegerField()
+def get_options_list(card_list):
+    result = []
+    for c in card_list:
+        result.append(get_options(c))
+    return result
+
+
+def get_options(card):
+    """
+    Get all options of a specified card.
+    :param card: a Card instance, or a 32/36-bit length string represent card id
+    :return: a list of options, a TypeError or an IndexError
+    """
+    if isinstance(card, Card):
+        options = card.option_set.all()
+        return list(options)
+    elif isinstance(card, str):
+        if len(card.strip('-')) == 32:
+            try:
+                options = Card.objects.filter(card_id=card)[0].option_set.all()
+                return list(options)
+            except IndexError:
+                return IndexError("[ERROR] Unable to find the corresponding record")
+        else:
+            raise TypeError("[ERROR] Invalid ID Length")
+    else:
+        raise TypeError("[ERROR] Invalid Input")
+
+
+def add_card2coll(card, collection):
+    """
+    Insert a card to collection
+    :param card: a Card instance, or a 32/36-bit length string represent card id
+    :param collection: a Collection instance, or a 32/36-bit length string represent collection id
+    :return: a Collection instance
+    """
+    if isinstance(card, Card):
+        card = card.card_id
+    elif isinstance(card, str):
+        if len(card.strip('-')) != 32:
+            raise TypeError("[ERROR] Invalid ID Length")
+    try:
+        c = Card.objects.filter(card_id=card)[0]
+    except IndexError:
+        raise IndexError("[ERROR] Unable to find the corresponding record")
+
+    if isinstance(collection, Collection):
+        collection = collection.coll_id
+    elif isinstance(collection, str):
+        if len(collection.strip('-')) != 32:
+            raise TypeError("[ERROR] Invalid ID Length")
+    try:
+        s = Collection.objects.filter(coll_id=collection)[0]
+    except IndexError:
+        raise IndexError("[ERROR] Unable to find the corresponding record")
+
+    s.coll_cards.add(c)
+    return s
