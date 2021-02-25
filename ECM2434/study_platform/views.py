@@ -5,13 +5,15 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import get_user_model
 from .utils import paging, get_page
-
+from .forms import User
 
 # Create your views here.
 '''
     This is the view used to authenticate and create a new user when they register. If the registration is authenticated
     then the user is logged in and taken to their profile page.
 '''
+
+
 def register_view(request):
     if request.method == 'POST':
         print("a")
@@ -35,12 +37,15 @@ def register_view(request):
         print("c")
         form = UserCreationForm()
     print("d")
-    return render(request, "register.html", {'form':form})
+    return render(request, "register.html", {'form': form})
+
 
 '''
     This view is used to authenticate and log in a user. If login is authenticated then it takes them directly to their
     profile page
 '''
+
+
 def login_view(request):
     if request.method == 'POST':
         form = AuthenticationForm(request=request, data=request.POST)
@@ -52,7 +57,7 @@ def login_view(request):
             if user is not None:
                 login(request, user)
                 print("logged in")
-                #messages.info(request, f"You are now logged in as {username}")
+                # messages.info(request, f"You are now logged in as {username}")
                 print("blast off")
                 return redirect('/profile')
             else:
@@ -62,11 +67,14 @@ def login_view(request):
             messages.error(request, "Invalid username or password")
 
     form = AuthenticationForm()
-    return render(request, "login.html", {'form':form})
+    return render(request, "login.html", {'form': form})
+
 
 '''
     Simply takes the user to the homepage.
 '''
+
+
 def home_view(request):
     return render(request, "homepage.html")
 
@@ -97,8 +105,23 @@ def profile_view(request):
     return render(request, "profile_me.html", pars)
 
 
+""" the following pages are solely web pages which has no communication with the database yet, but only skeletons
+    which describes what the corresponding functions should look like. """
+
+
 def shop(request):
     return render(request, 'shop.html')
+
+
+def create_card(request):
+    return render(request, 'create_new_card.html')
+
+
+def answer_quiz(request):
+    return render(request, 'answer_quiz.html')
+
+
+""" In order to implement pagination on the web page, several testing data is added to this function """
 
 
 def card_set_list(request):
@@ -128,4 +151,4 @@ def card_set_list(request):
         "pg_size": len(pars2),
         "cur_page": pg_num
     }
-    return render(request, 'BootstrapPractice/TestPage.html', output)
+    return render(request, 'card_sets.html', output)
