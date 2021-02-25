@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% load static %}
+    <script src="https://kit.fontawesome.com/3afd3220e7.js" crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="{% static 'bs5/bootstrap.css' %}">
+  <title>View Card Sets</title>
+</head>
+<body>
+  <div class="container" style="
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+   text-align: left;
+   min-height: 100vh;">
+    <div class="row">
+      <div class="col-md-3">
+        <div class="card" style="width: 40rem">
+          <div class="card-body">
+            <label>
+              Search for tags: <input type="text" id="input">
+            </label>
+            <a role="button" id="search">
+              <img src="{% static 'images/Search.png' %}" alt="" style="width: 2rem; height: 2rem">
+            </a>
+            <p id="curTags">Current Tags: </p>
+            <button id="clear" class="btn btn-danger float-end" >Clear</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- TODO: for all card sets in the database -->
+    {% for c in card_sets %}
+    <div class="card-set shadow card my-2" style="width: 40rem;"> <!-- TODO:change width to fit phones -->
+          <div class="card-body">
+            <div class="row">
+              <div class="col-3" style="text-align: center">
+                <img class="img-fluid rounded-circle" src="{% static 'images/Sample_Image2.webp' %}" alt="" style="height: 5rem; width: 5rem">
+                <h4>{{ c.Author }}</h4>
+                <small class="text-muted">dd/mm/yyyy</small>
+                <small></small>
+              </div>
+              <div class="col">
+                <div class="row">
+                  <div class="col-3">
+                    <h4 class="card-title">{{ c.Title }}</h4>
+                  </div>
+                  <div class="col">
+                    <!-- TODO: for all tags in one card-set -->
+                    {% for t in c.Tags %}
+                    <span class="mx-1 tags badge bg-warning float-end">{{ t }}</span>
+                      {% endfor %}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <p class="card-text">{{ c.Description }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button class="float-end btn btn-link link-warning">Quiz</button>
+            <button class="float-end btn btn-link link-warning">Revision</button>
+          </div>
+        </div>
+    {% endfor %}
+  <div class="row">
+    <div class="col">
+      <form action="{% url 'study_platform:card_set_list' %}" method="get">
+        <label class="my-3">
+          Jump to page:
+          <select name="pg_num" id="pgHolder" onchange="this.form.submit()"></select>
+        </label>
+      </form>
+    </div>
+  </div>
+  </div>
+</body>
+<script>
+  document.getElementById("search").addEventListener('click',addTag);
+  document.getElementById("clear").addEventListener('click',clear);
+
+  let inputs = [];
+
+  let pgSize = {{ pg_size }};
+  let pgHolder = document.getElementById("pgHolder");
+  for(let a=1;a<=pgSize;a++){
+      let newPageOption = document.createElement("option");
+      let newPageNum = document.createTextNode(a.toString());
+      newPageOption.appendChild(newPageNum);
+      newPageOption.value = a.toString();
+      pgHolder.appendChild(newPageOption);
+  }
+  let curPage = {{ cur_page }};
+  let opt = pgHolder.options;
+  for(let b=0;b<opt.length;b++){
+      if(parseInt(opt[b].value) === curPage){
+          pgHolder.selectedIndex = b;
+          break;
+      }
+  }
+
+  function addTag(){
+      let input;
+      input = document.getElementById("input").value.toLowerCase();
+      if(input){
+          if(inputs[0]){
+              for(let i=0;i<inputs.length;i++){
+                  if(inputs[i] === input) break;
+                  else if(inputs[i] !== input && i === inputs.length-1){
+                      inputs.push(input);
+                      addSearchTags(input);
+                      search();
+                  }
+              }
+          }else{
+              inputs.push(input);
+              addSearchTags(input);
+              search();
+          }
+      }
+  }
+
+  function search(){
+      let filter, card_set, tags, txtValue;
+      card_set = document.getElementsByClassName("card-set");
+      for(let i=0; i < card_set.length; i++){
+          card_set[i].style.display = "none";
+          tags = card_set[i].getElementsByClassName("tags");
+          for(let j=0; j < tags.length; j++){
+              for(let k=0;k<inputs.length;k++){
+                  filter = inputs[k].toString().toLowerCase();
+                  txtValue = tags[j].innerHTML.toLowerCase();
+                  if(txtValue === filter){
+                      card_set[i].style.display = "";
+                  }
+              }
+          }
+      }
+  }
+
+  function clear(){
+      inputs = [];
+      document.getElementById("curTags").innerHTML = "Current Tags: ";
+      let card_set = document.getElementsByClassName("card-set");
+      for(let i=0;i<card_set.length;i++){
+          card_set[i].style.display = "";
+      }
+  }
+
+  function addSearchTags(input){
+      let newTag = document.createElement("span");
+      let content = document.createTextNode(input);
+      newTag.appendChild(content);
+      newTag.classList.add("badge", "bg-warning", "mx-1");
+      let element = document.getElementById("curTags");
+      element.appendChild(newTag);
+  }
+</script>
+</html>

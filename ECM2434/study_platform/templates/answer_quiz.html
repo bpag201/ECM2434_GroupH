@@ -17,7 +17,7 @@
    min-height: 100vh;">
     <div class="row">
       <div class="col">
-        <form method="post" target=""> <!-- change target to backend url -->
+        <form method="post" target=""> {% csrf_token %} <!-- change target to backend url -->
           <ul class="shadow list-group my-3">
             <!-- {/{for question in question_list}} -->
             <li class="list-group-item">

@@ -4,6 +4,7 @@ from django.contrib.auth.models import User, AbstractBaseUser, BaseUserManager
 from django.contrib.auth import get_user_model
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+import uuid
 
 """ One thing I'm not sure: I don't know if it's appropriate to use auto_now / auto_now_add options in the 
     DateTimeFields, if someone could check if I used these options correctly it will be great. Thanks."""
@@ -15,6 +16,10 @@ from django.dispatch import receiver
 
 
 class Course(models.Model):
+    def __init__(self, *args, **kwargs):
+        super().__init__(args, kwargs)
+        self.college = None
+
     name = models.CharField(max_length=20)
 
 
@@ -30,6 +35,7 @@ class UserProfile(models.Model):
     score = models.IntegerField()
     resource = models.IntegerField()
     avatar = models.ImageField()
+    date_of_birth = models.DateField(null=True)
     user_tier = models.CharField(
         max_length=3,
         choices=Tiers.choices,
@@ -40,6 +46,10 @@ class UserProfile(models.Model):
    
     # inventory: I plan to implement inventory by calling the user.reward_set.all() function which returns all related
     # loots
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(args, kwargs)
+        self.team = None
 
     def __str__(self):
         return self.full_name
@@ -218,3 +228,55 @@ Course.college = models.ForeignKey(College, on_delete=models.CASCADE)
 # Shouldn't reference User directly so we use this instead
 # User = get_user_model()
 
+class Card(models.Model):
+    card_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    card_type = models.IntegerField()
+    card_content = models.TextField()
+    card_creator = models.ForeignKey(User, on_delete=models.CASCADE)
+    card_creat_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.card_content
+
+
+class Option(models.Model):
+    opt_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    opt_cid = models.ForeignKey(Card, on_delete=models.CASCADE)
+    opt_type = models.CharField(max_length=3, default='TXT')  # IMG - image; TXT - text
+    opt_content = models.CharField(max_length=512)
+    opt_isCorrect = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.opt_content
+
+
+class Collection(models.Model):
+    coll_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    coll_title = models.CharField(max_length=64)
+    coll_description = models.CharField(max_length=512)
+    coll_cards = models.ManyToManyField(Card)
+    coll_creator = models.ForeignKey(User, on_delete=models.CASCADE)
+    coll_creat_date = models.DateTimeField(auto_now_add=True)
+
+
+# to be completed
+class Poster(models.Model):
+    post_id = models.UUIDField(primary_key=True, default=uuid.uuid4(), editable=False)
+    post_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    post_tag = models.CharField(max_length=64)
+    post_pin = models.BooleanField(default=False)
+
+    post_title = models.CharField(max_length=64)
+    post_content = models.TextField()
+    post_time = models.DateTimeField(auto_now=True)
+
+
+# to be completed
+class Comment(models.Model):
+    comt_id = models.UUIDField(primary_key=True, default=uuid.uuid4(), editable=False)
+    comt_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    comt_type = models.CharField(max_length=1)  # C-comment, R-reply, P-post
+    comt_pid = models.CharField(max_length=64)
+    comt_content = models.TextField()
+    comt_time = models.DateTimeField(auto_now=True)
+    comt_like = models.IntegerField()
