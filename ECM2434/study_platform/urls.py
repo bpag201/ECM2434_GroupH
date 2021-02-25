@@ -12,5 +12,6 @@ urlpatterns = [
     path('create_card/', views.create_card, name='create_card'),       # For creating a new question card
     path('answer_quiz/', views.answer_quiz, name='answer_quiz'),       # For the quiz-answering page
     path('card_set_list/', views.card_set_list, name='card_set_list'), # For viewing all possible card sets
-
+    path('flash_card/', views.flash_card, name='flash_card')           # For viewing a flash card set, which could also
+                                                                       # be used for quiz cards
 ]
