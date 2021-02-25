@@ -68,7 +68,7 @@
     {% endfor %}
   <div class="row">
     <div class="col">
-      <form action="{% url 'study_platform:test' %}" method="get">
+      <form action="{% url 'study_platform:card_set_list' %}" method="get">
         <label class="my-3">
           Jump to page:
           <select name="pg_num" id="pgHolder" onchange="this.form.submit()"></select>
