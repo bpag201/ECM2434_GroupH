@@ -15,6 +15,10 @@ from django.dispatch import receiver
 
 
 class Course(models.Model):
+    def __init__(self, *args, **kwargs):
+        super().__init__(args, kwargs)
+        self.college = None
+
     name = models.CharField(max_length=20)
 
 
@@ -30,6 +34,7 @@ class UserProfile(models.Model):
     score = models.IntegerField()
     resource = models.IntegerField()
     avatar = models.ImageField()
+    date_of_birth = models.DateField(null=True)
     user_tier = models.CharField(
         max_length=3,
         choices=Tiers.choices,
@@ -40,6 +45,10 @@ class UserProfile(models.Model):
    
     # inventory: I plan to implement inventory by calling the user.reward_set.all() function which returns all related
     # loots
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(args, kwargs)
+        self.team = None
 
     def __str__(self):
         return self.full_name
