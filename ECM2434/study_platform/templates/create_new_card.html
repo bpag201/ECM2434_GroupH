@@ -20,7 +20,7 @@
           <div class="col">
               <div class="shadow card my-3">
                   <div class="card-body">
-                      <form method="post" target=""> {% csrf_token %} <!-- change target to backend url -->
+                      <form method="post" target=""> <!-- change target to backend url -->
                           <label for="question">Question: </label>
                           <input class="form-control" type="text" name="question" id="question"><br>
                           <label for="correct_answer">Correct Answer: </label>
@@ -39,6 +39,7 @@
                               <input class="form-control" type="text" name="alternative3" id="alternative3"><br>
                           </div>
                           <button class="btn btn-secondary" type="submit">Create</button>
+                          <button class="btn btn-warning float-end">Cancel</button>
                           <script>
                               function display(){
                                   let x = document.getElementById("alternatives");
