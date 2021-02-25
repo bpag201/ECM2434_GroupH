@@ -9,6 +9,32 @@ from .forms import User
 from .models import UserProfile, Course
 
 # Create your views here.
+
+# '''
+#     Sets the given user's resources (currency) to the given value
+# '''
+# def set_resource(resource, username):
+#     UserProfile.objects
+#     User.objects
+
+#     user = UserProfile(user=User(username=username))
+
+#     user.resource = resource
+
+# '''
+#     Gets the given user's resources
+# '''
+# def get_resource(username):
+#     UserProfile.objects
+#     User.objects
+
+#     user = UserProfile(user=User(username=username))
+
+#     resource = user.resource
+#     return resource
+
+# Create your views here.
+
 '''
     This is the view used to authenticate and create a new user when they register. If the registration is authenticated
     then the user is logged in and taken to their profile page.
