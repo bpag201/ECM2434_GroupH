@@ -2,9 +2,33 @@ from django.http import HttpResponse
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import get_user_model
+# from models import UserProfile
 
+# '''
+#     Sets the given user's resources (currency) to the given value
+# '''
+# def set_resource(resource, username):
+#     UserProfile.objects
+#     User.objects
+
+#     user = UserProfile(user=User(username=username))
+
+#     user.resource = resource
+
+# '''
+#     Gets the given user's resources
+# '''
+# def get_resource(username):
+#     UserProfile.objects
+#     User.objects
+
+#     user = UserProfile(user=User(username=username))
+
+#     resource = user.resource
+#     return resource
 
 # Create your views here.
 '''
@@ -79,21 +103,22 @@ def profile_view(request):
     output: see pars
     """
 
-    user_login_name = request.session['user_login_name']
+    # user_login_name = request.session['user_login_name']
     # we have to decide another credential for login since real name can be duplicated
-    cur_user = get_object_or_404(User, full_name=user_login_name)
-    pars = {
-        'real_name': cur_user.full_name,
-        'nick_name': cur_user.nickname,
-        'email': cur_user.email,
-        'college': cur_user.course.college,
-        'dob': cur_user.date_of_birth,
-        'resource': cur_user.resource,
-        'achievement': cur_user.achievement_set.all(),
-        'team': cur_user.team,  # can a user join more than one team?
-        'user_tier': cur_user.user_tier.label  # maybe wrong value
-    }
-    return render(request, "profile_me.html", pars)
+    # cur_user = get_object_or_404(User, usename=user_login_name)
+    # cur_user_profile = get_object_or_404(UserProfile, user=cur_user)
+    # pars = {
+    #     'real_name': cur_user.full_name,
+    #     'nick_name': cur_user_profile.nickname,
+    #     'email': cur_user.email,
+    #     'college': cur_user_profile.course.college,
+    #     'dob': cur_user.date_of_birth,
+    #     'resource': cur_user_profile.resource,
+    #     'achievement': cur_user.achievement_set.all(),
+    #     'team': cur_user.team,  # can a user join more than one team?
+    #     'user_tier': cur_user.user_tier.label  # maybe wrong value
+    # }
+    return render(request, "profile_me.html")#, pars)
 
 
 def shop(request):
