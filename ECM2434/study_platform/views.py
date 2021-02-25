@@ -6,6 +6,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import get_user_model
 from .utils import paging, get_page
 from .forms import User
+from .models import UserProfile, Course
 
 # Create your views here.
 '''
@@ -88,21 +89,36 @@ def profile_view(request):
     output: see pars
     """
 
-    user_login_name = request.session['user_login_name']
+    # user_login_name = request.session['user_login_name']
+
     # we have to decide another credential for login since real name can be duplicated
-    cur_user = get_object_or_404(User, full_name=user_login_name)
-    pars = {
-        'real_name': cur_user.full_name,
-        'nick_name': cur_user.nickname,
-        'email': cur_user.email,
-        'college': cur_user.course.college,
-        'dob': cur_user.date_of_birth,
-        'resource': cur_user.resource,
-        'achievement': cur_user.achievement_set.all(),
-        'team': cur_user.team,  # can a user join more than one team?
-        'user_tier': cur_user.user_tier.label  # maybe wrong value
-    }
-    return render(request, "profile_me.html", pars)
+    # cur_user = get_object_or_404(User, full_name=user_login_name)
+
+    cur_user = request.user
+
+    """Error: the following code will raise an error, since when a user is registered, only the user object is created, 
+       But not the user profile."""
+
+    # try:
+    #     cur_user_profile = cur_user.userprofile
+    # except Exception:
+    #     cur_user_course = Course(name='Bsc Computer Science')
+    #     cur_user_course.save()
+    #     cur_user_profile = UserProfile(user=cur_user, nickname=cur_user.username, course=cur_user_course, avatar='/static/images/bex3.jpg')
+    #     cur_user_profile.save()
+    # cur_user_fullname = cur_user.first_name + cur_user.last_name
+    # pars = {
+    #     'real_name': cur_user_fullname,
+    #     'nick_name': cur_user_profile.nickname,
+    #     'email': cur_user.email,
+    #     'college': cur_user_profile.course.college,
+    #     'DOB': cur_user_profile.date_of_birth,
+    #     'resource': cur_user_profile.resource,
+    #     'achievement': cur_user_profile.achievement_set.all(),
+    #     'team': cur_user_profile.team,  # can a user join more than one team?
+    #     'user_tier': cur_user_profile.user_tier  # maybe wrong value
+    # }
+    return render(request, "profile_me.html")
 
 
 """ the following pages are solely web pages which has no communication with the database yet, but only skeletons
