@@ -1,4 +1,4 @@
-vfrom groupH.models import Collection, Card, Comment, Poster, Option
+from groupH.models import Collection, Card, Comment, Poster, Option
 
 
 def id_style_check(i):
