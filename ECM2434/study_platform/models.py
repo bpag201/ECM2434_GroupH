@@ -230,8 +230,9 @@ Course.college = models.ForeignKey(College, on_delete=models.CASCADE)
 
 
 class Card(models.Model):
-    card_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name='id')
+    card_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     card_type = models.IntegerField()
+    card_tags = models.CharField(max_length=128, blank=True, null=True)
     card_content = models.TextField()
     card_creator = models.ForeignKey(User, on_delete=models.CASCADE)
     card_create_date = models.DateTimeField(auto_now_add=True)
@@ -241,7 +242,7 @@ class Card(models.Model):
 
 
 class Option(models.Model):
-    opt_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name='id')
+    opt_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     opt_cid = models.ForeignKey(Card, on_delete=models.CASCADE)
     opt_type = models.CharField(max_length=3, default='TXT')  # IMG - image; TXT - text
     opt_content = models.CharField(max_length=512)
@@ -252,7 +253,7 @@ class Option(models.Model):
 
 
 class Collection(models.Model):
-    coll_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name='id')
+    coll_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     coll_title = models.CharField(max_length=64)
     coll_description = models.CharField(max_length=512)
     coll_cards = models.ManyToManyField(Card)
@@ -261,7 +262,7 @@ class Collection(models.Model):
 
 
 class Poster(models.Model):
-    post_id = models.UUIDField(primary_key=True, default=uuid.uuid4(), editable=False, verbose_name='id')
+    post_id = models.UUIDField(primary_key=True, default=uuid.uuid4(), editable=False)
     post_user = models.ForeignKey(User, on_delete=models.CASCADE)
     post_tag = models.CharField(max_length=64)
     post_pin = models.BooleanField(default=False)
@@ -272,10 +273,11 @@ class Poster(models.Model):
 
 
 class Comment(models.Model):
-    comt_id = models.UUIDField(primary_key=True, default=uuid.uuid4(), editable=False, verbose_name='id')
+    comt_id = models.UUIDField(primary_key=True, default=uuid.uuid4(), editable=False)
     comt_user = models.ForeignKey(User, on_delete=models.CASCADE)
     comt_type = models.CharField(max_length=1)  # C-comment, R-reply, P-post
     comt_father_id = models.CharField(max_length=64)
     comt_content = models.TextField()
     comt_time = models.DateTimeField(auto_now=True)
     comt_like = models.IntegerField()
+
