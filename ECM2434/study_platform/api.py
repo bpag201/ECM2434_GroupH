@@ -4,7 +4,9 @@ import uuid
 
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
-from groupH.models import Collection, Card, Comment, Poster, Option
+# from groupH.models import Collection, Card, Comment, Poster, Option
+from study_platform.models import Collection, Card, Comment, Poster, Option
+
 
 logging.basicConfig(format='[%(asctime)s] - %(levelname)s: %(message)s',
                     level=logging.INFO, datefmt="%Y-%m-%d %H:%M:%S")
@@ -57,12 +59,7 @@ def get_all_cards(collection):
 
     if isinstance(collection, Collection):
         result = list(collection.coll_cards.all())
-        if len(result) <= 0:
-            msg = ("0 record found under collection with ID-{}".format(collection))
-            logging.info(msg)
-            raise ObjectDoesNotExist("[ERROR] " + msg)
-        else:
-            return result
+        return result
     elif isinstance(collection, uuid.UUID):
         try:
             result = list(Collection.objects.get(coll_id=collection).coll_cards.all())
@@ -87,7 +84,7 @@ def get_options(card):
     :param card: a Card instance, or a 32/36-bit length string represent card id
     :type card: Card | str | UUID
 
-    :return: a list of options, a TypeError or an IndexError
+    :return: a list of options, will return an empty list if no options found
     :rtype: list[Option]
 
     :exception TypeError: raises when the input is not a valid id or collection instance
