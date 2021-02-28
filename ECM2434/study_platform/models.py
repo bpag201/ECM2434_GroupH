@@ -41,7 +41,7 @@ class UserProfile(models.Model):
         choices=Tiers.choices,
         default=Tiers.STUDENT
     )
-    REQUIRED_FIELD = ['full_name', 'email', 'nickname', 'course', 'user_tier']
+    REQUIRED_FIELD = ['user', 'nickname', 'course', 'user_tier']
 
    
     # inventory: I plan to implement inventory by calling the user.reward_set.all() function which returns all related

@@ -43,27 +43,31 @@ from .models import UserProfile, Course
 
 def register_view(request):
     if request.method == 'POST':
-        print("a")
         form = UserCreationForm(data=request.POST)
-        print(request.POST)
-        print(form.is_valid())
         if form.is_valid():
-            print("b")
             form.save()
-            print("save")
+
+            # All of the variables we will take out of the form
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
-            print(username)
-            print(raw_password)
+            last_name = form.cleaned_data.get('last_name')
+            first_name = form.cleaned_data.get('first_name')
+            email = form.cleaned_data.get('email')
+            nickname = form.cleaned_data.get('nickname')
+
             user = authenticate(username=username, password=raw_password)
-            print("authenticated")
+
+            # Assign all of the required variables to user
+            user.last_name = last_name
+            user.first_name = first_name
+            user.email = email
+
+            UserProfile.objects.get_or_create(user=user, nickname=nickname)
+
             login(request, user)
-            print("logged in")
             return redirect('/profile')
     else:
-        print("c")
         form = UserCreationForm()
-    print("d")
     return render(request, "register.html", {'form': form})
 
 
@@ -77,20 +81,19 @@ def login_view(request):
     if request.method == 'POST':
         form = AuthenticationForm(request=request, data=request.POST)
         if form.is_valid():
-            print("form valid")
+
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
+            
             user = authenticate(username=username, password=password)
+
+
             if user is not None:
                 login(request, user)
-                print("logged in")
-                # messages.info(request, f"You are now logged in as {username}")
-                print("blast off")
                 return redirect('/profile')
             else:
                 messages.error(request, "Invalid username or password")
         else:
-            print("form invalid")
             messages.error(request, "Invalid username or password")
 
     form = AuthenticationForm()
