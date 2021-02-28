@@ -4,7 +4,10 @@ from django.contrib.auth.models import User, AbstractBaseUser, BaseUserManager
 from django.contrib.auth import get_user_model
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from taggit.managers import TaggableManager
+from taggit.models import GenericUUIDTaggedItemBase, TaggedItemBase
 import uuid
+
 
 """ One thing I'm not sure: I don't know if it's appropriate to use auto_now / auto_now_add options in the 
     DateTimeFields, if someone could check if I used these options correctly it will be great. Thanks."""
@@ -229,10 +232,17 @@ Course.college = models.ForeignKey(College, on_delete=models.CASCADE)
 # User = get_user_model()
 
 
+class Tag(GenericUUIDTaggedItemBase, TaggedItemBase):
+
+    class Meta:
+        verbose_name = _("Tag")
+        verbose_name_plural = _("Tags")
+
+
 class Card(models.Model):
     card_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     card_type = models.IntegerField()
-    card_tags = models.CharField(max_length=128, blank=True, null=True)
+    card_tags = TaggableManager(blank=True, through=Tag)
     card_content = models.TextField()
     card_creator = models.ForeignKey(User, on_delete=models.CASCADE)
     card_create_date = models.DateTimeField(auto_now_add=True)
@@ -255,21 +265,25 @@ class Option(models.Model):
 class Collection(models.Model):
     coll_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     coll_title = models.CharField(max_length=64)
+    coll_tags = TaggableManager(blank=True, through=Tag)
     coll_description = models.CharField(max_length=512)
     coll_cards = models.ManyToManyField(Card)
     coll_creator = models.ForeignKey(User, on_delete=models.CASCADE)
     coll_create_date = models.DateTimeField(auto_now_add=True)
 
 
-class Poster(models.Model):
-    post_id = models.UUIDField(primary_key=True, default=uuid.uuid4(), editable=False)
-    post_user = models.ForeignKey(User, on_delete=models.CASCADE)
-    post_tag = models.CharField(max_length=64)
-    post_pin = models.BooleanField(default=False)
+class Blog(models.Model):
+    blog_id = models.UUIDField(primary_key=True, default=uuid.uuid4(), editable=False)
+    blog_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    blog_tags = TaggableManager(blank=True, through=Tag)
+    blog_pin = models.BooleanField(default=False)
 
-    post_title = models.CharField(max_length=64)
-    post_content = models.TextField()
-    post_time = models.DateTimeField(auto_now=True)
+    blog_title = models.CharField(max_length=64)
+    blog_content = models.TextField()
+    blog_time = models.DateTimeField(auto_now=True)
+
+    def get_tags(self):
+        self.blog_tags.names()
 
 
 class Comment(models.Model):
@@ -280,4 +294,3 @@ class Comment(models.Model):
     comt_content = models.TextField()
     comt_time = models.DateTimeField(auto_now=True)
     comt_like = models.IntegerField()
-
