@@ -1,14 +1,71 @@
 {
     "common": {
-        "blacktophat": ".\\rewards\\Top hat png\\Black strip top hat.png"
+        "blacktophat": ".\\rewards\\Top hat png\\Black strip top hat.png",
+        "darkbluetophat": ".\\rewards\\Top hat png\\Dark blue strip top hat.png",
+        "greenstriptophat": ".\\rewards\\Top hat png\\Green strip top hat.png",
+        "maroonstriptophat": ".\\rewards\\Top hat png\\Maroon strip top hat.png",
+        "mediumbluestriptophat": ".\\rewards\\Top hat png\\Medium blue strip top hat.png",
+        "purplestriptophat": ".\\rewards\\Top hat png\\Purple strip top hat.png",
+        "redstriptophat": ".\\rewards\\Top hat png\\Red strip top hat.png",
+        "whitestriptophat": ".\\rewards\\Top hat png\\White strip top hat.png",
+        "yellowstriptophat": ".\\rewards\\Top hat png\\Yellow strip top hat.png",
+        "brownsquareglasses": ".\\rewards\\Square glasses png\\Brown square glasses.png",
+        "darkgreensquareglasses": ".\\rewards\\Square glasses png\\Dark green square glasses.png",
+        "mediumbluesquareglasses": ".\\rewards\\Square glasses png\\Medium blue square glasses.png",
+        "purplesquareglasses": ".\\rewards\\Square glasses png\\Purple square glasses.png",
+        "brownroundglasses": ".\\rewards\\Round glasses png\\Brown round glasses.png",
+        "darkgreenroundglasses": ".\\rewards\\Round glasses png\\Dark green round glasses.png",
+        "mediumblueroundglasses": ".\\rewards\\Round glasses png\\Medium blue round glasses.png",
+        "purpleroundglasses": ".\\rewards\\Round glasses png\\Purple round glasses.png",
+        "redroundglasses": ".\\rewards\\Round glasses png\\Red round glasses.png",
+        "yellowroundglasses": ".\\rewards\\Round glasses png\\Yellow round glasses.png",
+        "brownmoustache": ".\\rewards\\Moustache png\\Brown moustache.png",
+        "blackcowboyhat": ".\\rewards\\Cowboy hat png\\Cowboy hat black band.png",
+        "darkgreencowboyhat": ".\\rewards\\Cowboy hat png\\Cowboy hat dark green band.png",
+        "marooncowboyhat": ".\\rewards\\Cowboy hat png\\Cowboy hat maroon band.png",
+        "mediumbluecowboyhat": ".\\rewards\\Cowboy hat png\\Cowboy hat medium blue band.png",
+        "purplecowboyhat": ".\\rewards\\Cowboy hat png\\Cowboy hat purple band.png",
+        "redcowboyhat": ".\\rewards\\Cowboy hat png\\Cowboy hat red band.png",
+        "whitecowboyhat": ".\\rewards\\Cowboy hat png\\Cowboy hat white band.png",
+        "browncowboyhat": ".\\rewards\\Cowboy hat png\\Cowboy hat.png"
     },
     "uncommon": {
-
+        "brightgreenstriptophat": ".\\rewards\\Top hat png\\Bright green strip top hat.png",
+        "greystriptophat": ".\\rewards\\Top hat png\\Grey strip top hat.png",
+        "orangestriptophat": ".\\rewards\\Top hat png\\Orange strip top hat.png",
+        "darkbluesquareglasses": ".\\rewards\\Square glasses png\\Dark blue square glasses.png",
+        "lightgreensquareglasses": ".\\rewards\\Square glasses png\\Light green square glasses.png",
+        "maroonsquareglasses": ".\\rewards\\Square glasses png\\Maroon square glasses.png",
+        "orangesquareglasses": ".\\rewards\\Square glasses png\\Orange square glasses.png",
+        "darkblueroundglasses": ".\\rewards\\Round glasses png\\Dark blue round glasses.png",
+        "maroonroundglasses": ".\\rewards\\Round glasses png\\Maroon round glasses.png",
+        "whiteroundglasses": ".\\rewards\\Round glasses png\\White round glasses.png",
+        "whitemoustache": ".\\rewards\\Moustache png\\White moustache.png",
+        "yellowmoustache": ".\\rewards\\Moustache png\\Yellow moustache.png",
+        "darkbluecowboyhat": ".\\rewards\\Cowboy hat png\\Cowboy hat dark blue band.png",
+        "orangecowboyhat": ".\\rewards\\Cowboy hat png\\Cowboy hat orange band.png",
+        "yellowcowboyhat": ".\\rewards\\Cowboy hat png\\Cowboy hat yellow band.png",
+        "redbackground": ".\\rewards\\Backgrounds png\\red background.png"
     },
     "rare": {
-
+        "lightbluestriptophat": ".\\rewards\\Top hat png\\Light blue strip top hat.png",
+        "pinkstriptophat": ".\\rewards\\Top hat png\\Pink strip top hat.png",
+        "brightgreensquareglasses": ".\\rewards\\Square glasses png\\Bright green square glasses.png",
+        "redsquareglasses": ".\\rewards\\Square glasses png\\Red square glasses.png",
+        "yellowsquareglasses": ".\\rewards\\Square glasses png\\Yellow square glasses.png",
+        "brightgreenroundglasses": ".\\rewards\\Round glasses png\\Bright green round glasses.png",
+        "lightblueroundglasses": ".\\rewards\\Round glasses png\\Light blue round glasses.png",
+        "lightbluemoustache": ".\\rewards\\Moustache png\\Light blue moustache.png",
+        "redmoustache": ".\\rewards\\Moustache png\\Red moustache.png",
+        "brightgreencowboyhat": ".\\rewards\\Cowboy hat png\\Cowboy hat bright green band.png",
+        "lightbluecowboyhat": ".\\rewards\\Cowboy hat png\\Cowboy hat light blue band.png",
+        "lightgreenbackground": ".\\rewards\\Backgrounds png\\Light green background.png"
     },
     "legendary": {
-
+        "whitesquareglasses": ".\\rewards\\Square glasses png\\White square glasses.png",
+        "orangeroundglasses": ".\\rewards\\Round glasses png\\Orange round glasses.png",
+        "orangemoustache": ".\\rewards\\Moustache png\\Orange moustache.png",
+        "pinkcowboyhat": ".\\rewards\\Cowboy hat png\\Cowboy hat pink band.png",
+        "lightbluebackground": ".\\rewards\\Backgrounds png\\Light blue background.png"
     }
 }
