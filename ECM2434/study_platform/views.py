@@ -10,28 +10,29 @@ from .models import UserProfile, Course
 
 # Create your views here.
 
-# '''
-#     Sets the given user's resources (currency) to the given value
-# '''
-# def set_resource(resource, username):
-#     UserProfile.objects
-#     User.objects
+'''
+    Sets the given user's resources (currency) to the given value
+'''
+def set_resource(resource, username):
+    UserProfile.objects
+    User.objects
 
-#     user = UserProfile(user=User(username=username))
+    user = UserProfile(user=User(username=username))
 
-#     user.resource = resource
+    user.resource = resource
+    user.save()
 
-# '''
-#     Gets the given user's resources
-# '''
-# def get_resource(username):
-#     UserProfile.objects
-#     User.objects
+'''
+    Gets the given user's resources
+'''
+def get_resource(username):
+    UserProfile.objects
+    User.objects
 
-#     user = UserProfile(user=User(username=username))
+    user = UserProfile(user=User(username=username))
 
-#     resource = user.resource
-#     return resource
+    resource = user.resource
+    return resource
 
 # Create your views here.
 
@@ -39,8 +40,6 @@ from .models import UserProfile, Course
     This is the view used to authenticate and create a new user when they register. If the registration is authenticated
     then the user is logged in and taken to their profile page.
 '''
-
-
 def register_view(request):
     if request.method == 'POST':
         print("a")
@@ -71,8 +70,6 @@ def register_view(request):
     This view is used to authenticate and log in a user. If login is authenticated then it takes them directly to their
     profile page
 '''
-
-
 def login_view(request):
     if request.method == 'POST':
         form = AuthenticationForm(request=request, data=request.POST)
@@ -100,8 +97,6 @@ def login_view(request):
 '''
     Simply takes the user to the homepage.
 '''
-
-
 def home_view(request):
     return render(request, "homepage.html")
 
