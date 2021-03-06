@@ -425,7 +425,8 @@ def get_rank(target):
                 if rank_dict[con]['LowerLimit'] < score <= rank_dict[con]['UpperLimit']:
                     return rank_dict[con]['title']
         except FileNotFoundError as e:
-            msg = "Important file rank.json is missing, please "
+            msg = "Important file(s) is missing, please double confirm the file(s) path and restart the server!\n" \
+                  "  - rank.json"
             logging.critical(msg)
             reraise(type(e), type(e)("[ERROR] " + msg))
 
