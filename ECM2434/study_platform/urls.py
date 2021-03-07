@@ -9,9 +9,12 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),                    # For the login page
     path('profile/', views.profile_view, name='profile'),              # For the profile page
     path('shop/', views.shop, name='shop'),                            # For the shop page
-    path('create_card/', views.create_card, name='create_card'),       # For creating a new question card
     path('answer_quiz/', views.answer_quiz, name='answer_quiz'),       # For the quiz-answering page
     path('card_set_list/', views.card_set_list, name='card_set_list'), # For viewing all possible card sets
-    path('flash_card/', views.flash_card, name='flash_card')           # For viewing a flash card set, which could also
+    path('flash_card/', views.flash_card, name='flash_card'),          # For viewing a flash card set, which could also
                                                                        # be used for quiz cards
+    path('edit_set/', views.edit_set, name='edit_set'),
+    path('view_set/', views.view_set, name='view_set'),
+    path('navigation/', views.navigation_view, name='navigation'),
+    path('result/', views.result, name='result'),
 ]
