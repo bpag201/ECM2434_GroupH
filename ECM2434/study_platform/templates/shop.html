@@ -1,14 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+{% extends 'nav_bar.html' %}
+{% load static %}
+{% block head %}
 <head>
-    {% load static %}
     <script src="https://kit.fontawesome.com/3afd3220e7.js" crossorigin="anonymous"></script>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="{% static 'bs5/bootstrap.css' %}">
     <link rel="stylesheet" href="https://cdn.metroui.org.ua/v4/css/metro-all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
   <title>Shop</title>
+{{ block.super }}
 </head>
+{% endblock %}
+{% block body %}
 <body>
   <div class="container" style="
    display: flex;
@@ -27,7 +32,7 @@
         </div>
       </div>
       <div style="display: none" id="cards">
-        <div class="row my-5">
+        <div class="row mb-3">
           {% for i in "012345" %} <!-- TODO: get the list from the server -->
             <div class="col-2">
               <div class="card flip-card effect-on-active" style='width: 8rem; height: 16rem;'>
@@ -39,7 +44,7 @@
             </div>
           {% endfor %}
         </div>
-        <div class="row my-5">
+        <div class="row mb-3">
           {% for i in "6789AB" %}  <!-- TODO: get the list from the server -->
             <div class="col-2">
               <div class="card flip-card effect-on-active" style='width: 8rem; height: 16rem;'>
@@ -54,14 +59,77 @@
       </div>
     </div>
     <div class="row" style="min-width: 16rem">
-      <div class="col">
+      <div class="col-auto">
         <button class="btn btn-secondary" onclick="display()">Draw a Card</button>
       </div>
       <div class="col">
-        <button class="btn btn-warning float-end">Quit</button>
+        <button class="btn btn-warning float-end" onclick="window.location.href='{% url 'study_platform:navigation' %}'">Quit</button>
       </div>
     </div>
   </div>
-  <script src="{% static 'shop.js' %}"></script>
+  <script src="https://unpkg.com/@popperjs/core@2.4.0/dist/umd/popper.min.js"></script>
+  <script src="{% static 'bs5/bootstrap.js' %}"></script>
+  <script>
+      let resource = 1000; // TODO: get resource from the server
+      let firstTimeDraw = true;
+
+      function display(){
+          if(resource>=50){
+              firstTimeDraw = true;
+              resource -= 50;
+              updateGold();
+
+              /* send resource via post request */
+              let xhr = new XMLHttpRequest();
+              xhr.open("POST", null, true); // TODO:change null to a real url
+              xhr.setRequestHeader('Content-Type', 'application/json');
+              xhr.send(JSON.stringify({
+                  "resource": resource
+              }));
+
+              let x = document.getElementById("cards");
+              if(x.style.display === "none"){
+                  x.style.display = "block";
+                  x.classList.add("animate__animated", "animate__zoomIn");
+              }else{
+                  let newone = x.cloneNode(true);
+                  x.parentNode.replaceChild(newone, x);
+                  let backs = document.getElementsByClassName("effect-on-active");
+                  for(let i=0;i<backs.length;i++){
+                      backs[i].classList.remove("active");
+                  }
+              }
+          }else{
+              alert("Don't have enough gold!");
+          }
+          detectFlip();
+      }
+
+      function flipThis(){
+          if((resource >= 50 && !this.classList.contains("active")) || firstTimeDraw){
+              if(!firstTimeDraw) resource -= 50;
+              firstTimeDraw = false;
+              updateGold();
+              this.classList.add("active");
+          }else if(!this.classList.contains("active")){
+              alert("Don't have enough gold!");
+          }
+      }
+
+      function detectFlip(){
+          let fronts = document.getElementsByClassName("effect-on-active");
+          for(let i=0;i<fronts.length;i++){
+              fronts[i].addEventListener('click', flipThis);
+          }
+      }
+
+      function updateGold(){
+          let x = document.getElementById("resource");
+          x.innerHTML = resource;
+      }
+
+      updateGold();
+  </script>
 </body>
+{% endblock %}
 </html>

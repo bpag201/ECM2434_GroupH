@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
+{% extends 'nav_bar_for_navigation_page.html' %}
+{% load static %}
+{% block head %}
 <head>
     {% load static %}
     <script src="https://kit.fontawesome.com/3afd3220e7.js" crossorigin="anonymous"></script>
@@ -8,7 +11,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <link rel="stylesheet" type="text/css" href="{% static 'bs5/bootstrap.css' %}">
     <title>Quiz Feedback</title>
+{{ block.super }}
 </head>
+{% endblock %}
+{% block body %}
 <body>
   <div class="container" style="
    display: flex;
@@ -20,17 +26,26 @@
       <div class="row">
           <div class="col">
               <div id="question_card" class="card flip-card effect-on-active flip-horizontal" style="width: 40rem; min-height: 20rem">
-                  <div class="card-body front">
+                  <div class="card-body front d-flex flex-column">
                     <h1 class="card-title">Question</h1>
-                    <p class="card-text fs-4">Question Text</p>
+                      {% for question in questions %}
+                          {% if forloop.first %}
+                              <p id="question_text" class="card-text fs-4">{{ question }}</p>
+                          {% endif %}
+                      {% endfor %}
                   </div>
-                <div class="card-body back">
-                    <h1 class="card-title">Answer</h1>
-                    <p class="card-text fs-4">Answer Text</p>
+                  <div class="card-body back">
+                      <h1 class="card-title">Answer</h1>
+                      {% for answer in answers %}
+                          {% if forloop.first %}
+                              <p id="answer_text" class="card-text fs-4">{{ answer }}</p>
+                          {% endif %}
+                      {% endfor %}
                   </div>
               </div>
           </div>
       </div>
+
     <div class="row">
       <div class="col">
         <a role="button" id="prevQuestion">
@@ -51,42 +66,41 @@
         <h2>Comment:</h2>
       </div>
     </div>
-    <!-- TODO: for each comment in the list -->
-    <div class="row">
-          <div class="col">
-              <div class="card comment" style="width: 40rem;">
-                  <div class="card-body">
-                    <h3 class="card-title">User</h3>
-                    <p class="card-text fs-5">Comment Text</p>
-                  </div>
-              </div>
-          </div>
-      </div>
-    <div class="row">
-          <div class="col">
-              <div class="card comment" style="width: 40rem;">
-                  <div class="card-body">
-                    <h3 class="card-title">User</h3>
-                    <p class="card-text fs-5">Comment Text</p>
-                  </div>
-              </div>
-          </div>
-      </div>
-    <!-- TODO: end for -->
+    <div id="comt_container">
+        {% for comment in comments.0 %}
+        <div class="row">
+            <div class="col">
+                <div class="card comment" style="width: 40rem;">
+                    <div class="card-body">
+                        {% for text in comment %}
+                            {% if forloop.first %}
+                                <h3 class="card-title">{{ text }}</h3>
+                            {% endif %}
+                            {% if forloop.last %}
+                                <p class="card-text fs-5">{{ text }}</p>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
     <div class="row">
       <div class="col">
         <div class="card" style="width: 40rem">
           <div class="card-body">
-            <form method="post" id="post_comment">
+            <form action="{% url 'study_platform:flash_card' %}" method="post" id="post_comment"> {% csrf_token %}
+                <input type="hidden" name="i" value="{{ i }}">
               <div class="row">
                 <div class="col">
                   <label for="txa">Leave a comment:<br></label>
-                <textarea id="txa" rows="6" cols="68" form="post_comment"></textarea>
+                <textarea name="content" id="txa" rows="6" cols="68" form="post_comment"></textarea>
                 </div>
               </div>
-              <div class="row">
-                <div class="col">
-                  <button type="submit" class="btn btn-secondary">Send</button>
+                <div class="row">
+                    <div class="col">
+                        <button type="submit" class="btn btn-secondary">Send</button>
                 </div>
               </div>
             </form>
@@ -94,15 +108,21 @@
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col">
-        <button class="btn btn-secondary">Confirm</button>
+      <div class="row">
+          <div class="col">
+              <button class="btn btn-secondary" onclick="window.location.href='{% url 'study_platform:card_set_list' %}'">Confirm</button>
+          </div>
       </div>
-    </div>
   </div>
+  <script src="https://unpkg.com/@popperjs/core@2.4.0/dist/umd/popper.min.js"></script>
+  <script src="{% static 'bs5/bootstrap.js' %}"></script>
   <script>
-      let currentIndex = 1;
-      let quiz_size = 31;
+      let questions_data = {{ questions|safe }};
+      let answers_data = {{ answers|safe }};
+      let comments_data = {{ comments|safe }};
+      let currentIndex;
+      if(questions_data.length === 0){currentIndex=0;}else{currentIndex=1;}
+      let quiz_size = questions_data.length;
       document.getElementById("cur_index").innerHTML = currentIndex;
       document.getElementById("quiz_size").innerHTML = quiz_size.toString();
       document.getElementById("question_card").addEventListener('click',function(){this.classList.toggle("active");})
@@ -110,13 +130,41 @@
       document.getElementById("nextQuestion").addEventListener('click',nextQuestion);
       function prevQuestion(){
           let question_card = document.getElementById("question_card");
-          let comments = document.getElementsByClassName("comment");
           if(currentIndex > 1 && !question_card.classList.contains("animate__animated")){
+              let comt_container = document.getElementById("comt_container");
+              comt_container.innerHTML = "";
+              for(let looper1=0;looper1<comments_data.length;looper1++){
+                  for(let looper2=0;looper2<comments_data[looper1].length;looper2++){
+                      let comt_row = document.createElement("div");
+                      let comt_card = document.createElement("div");
+                      let comt_card_body = document.createElement("div");
+                      let comt_user = document.createElement("h3");
+                      let comt_text = document.createElement("p");
+                      comt_row.classList.add("row");
+                      comt_card.classList.add("card", "comment");
+                      comt_card_body.classList.add("card-body");
+                      comt_user.classList.add("card-title");
+                      comt_text.classList.add("card-text", "fs-5");
+                      comt_card.style.width = "40rem";
+                      comt_user.innerHTML = comments_data[looper2][0];
+                      comt_text.innerHTML = comments_data[looper2][1];
+                      comt_card_body.appendChild(comt_user);
+                      comt_card_body.appendChild(comt_text);
+                      comt_card.appendChild(comt_card_body);
+                      comt_row.appendChild(comt_card);
+                      comt_container.appendChild(comt_row);
+                  }
+              }
+              let comments = document.getElementsByClassName("comment");
+
               question_card.classList.add("animate__animated", "animate__fadeInLeft");
               for(let i=0;i<comments.length;i++){
                   comments[i].classList.add("animate__animated", "animate__fadeInLeft");
               }
               currentIndex -= 1;
+              document.getElementById("question_text").innerHTML = questions_data[currentIndex-1];
+              document.getElementById("answer_text").innerHTML = answers_data[currentIndex-1];
+
               document.getElementById("cur_index").innerHTML = currentIndex;
               setTimeout(function (){
                   question_card.classList.remove("animate__animated", "animate__fadeInLeft");
@@ -129,13 +177,41 @@
 
       function nextQuestion(){
           let question_card= document.getElementById("question_card");
-          let comments = document.getElementsByClassName("comment");
-          if(currentIndex < 31 && !question_card.classList.contains("animate__animated")){
+          if(currentIndex < quiz_size && !question_card.classList.contains("animate__animated")){
+              let comt_container = document.getElementById("comt_container");
+              comt_container.innerHTML = "";
+              for(let looper1=0;looper1<comments_data.length;looper1++){
+                  for(let looper2=0;looper2<comments_data[looper1].length;looper2++){
+                      let comt_row = document.createElement("div");
+                      let comt_card = document.createElement("div");
+                      let comt_card_body = document.createElement("div");
+                      let comt_user = document.createElement("h3");
+                      let comt_text = document.createElement("p");
+                      comt_row.classList.add("row");
+                      comt_card.classList.add("card", "comment");
+                      comt_card_body.classList.add("card-body");
+                      comt_user.classList.add("card-title");
+                      comt_text.classList.add("card-text", "fs-5");
+                      comt_card.style.width = "40rem";
+                      comt_user.innerHTML = comments_data[looper2][0];
+                      comt_text.innerHTML = comments_data[looper2][1];
+                      comt_card_body.appendChild(comt_user);
+                      comt_card_body.appendChild(comt_text);
+                      comt_card.appendChild(comt_card_body);
+                      comt_row.appendChild(comt_card);
+                      comt_container.appendChild(comt_row);
+                  }
+              }
+              let comments = document.getElementsByClassName("comment");
+
               question_card.classList.add("animate__animated", "animate__fadeInRight");
               for(let i=0;i<comments.length;i++){
                   comments[i].classList.add("animate__animated", "animate__fadeInRight");
               }
               currentIndex += 1;
+              document.getElementById("question_text").innerHTML = questions_data[currentIndex-1];
+              document.getElementById("answer_text").innerHTML = answers_data[currentIndex-1];
+
               document.getElementById("cur_index").innerHTML = currentIndex;
               setTimeout(function(){
                   question_card.classList.remove("animate__animated", "animate__fadeInRight");
@@ -148,4 +224,5 @@
       }
   </script>
 </body>
+{% endblock %}
 </html>
