@@ -198,3 +198,5 @@ def card_set_list(request):
         "cur_page": pg_num
     }
     return render(request, 'card_sets.html', output)
+def leaderboard(request):
+    return render(request,'leaderboard.html)
