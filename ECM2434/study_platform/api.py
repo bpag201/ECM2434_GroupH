@@ -1,18 +1,18 @@
 import logging
 import re
 import uuid
+import json
 
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
-from groupH.models import Collection, Card, Comment, Blog, Option, User
-# from study_platform.models import Collection, Card, Comment, Blog, Option
+from groupH.models import *
+# from study_platform.models import *
 
 
 logging.basicConfig(format='[%(asctime)s] - %(levelname)s: %(message)s',
                     level=logging.INFO, datefmt="%Y-%m-%d %H:%M:%S")
 
 
-# Done
 def reraise(exc_type, exc_value, exc_traceback=None):
     """
     Raise an exception, used to add information/message to a raised error
@@ -24,7 +24,6 @@ def reraise(exc_type, exc_value, exc_traceback=None):
     raise exc_value
 
 
-# Done
 def id_style_check(i):
     """
     check the style of id
@@ -38,7 +37,6 @@ def id_style_check(i):
     return len(re.findall("[0-9a-fA-F]", i.replace('-', ""))) == 32
 
 
-# Done
 def get_all_cards(collection):
     """
     Get a list of all cards in a specified collection
@@ -81,7 +79,6 @@ def get_all_cards(collection):
         raise TypeError("[ERROR] Invalid Input")
 
 
-# Done
 def get_options(card):
     """
     Get all options of a specified card.
@@ -124,7 +121,6 @@ def get_options(card):
         raise TypeError("[ERROR] Invalid Input")
 
 
-# Done
 def get_options_list(card_list):
     """
     get all options in a list of card
@@ -142,7 +138,6 @@ def get_options_list(card_list):
     return result
 
 
-# Done
 def add_card2coll(card, collection):
     """
     Insert a card to collection
@@ -209,7 +204,6 @@ def add_card2coll(card, collection):
     return s
 
 
-# Done
 def get_next_comt(father_id):
     """
     :param father_id: a 32/36-bit length id represented an instance of father_type
@@ -250,7 +244,6 @@ def get_next_comt(father_id):
         reraise(type(e), type(e)("[ERROR] " + msg))
 
 
-# Done
 def get_all_comt(father_id, amount=0):
     """
     get comments by a enter a ID.
@@ -372,6 +365,19 @@ def add_tags_to_Card(card, *tags):
 
 
 def remove_tags_from_Card(card, *tags):
+    """
+    Remove tag(s) from a card, **will not** raise an exception if tag(s) not exist
+
+    :param card: an instance of Card or a string represent Card ID
+    :type card: Card | str
+
+    :param tags: String(s) of tags
+    :type tags: str
+
+    :exception ObjectDoesNotExist: raises when no record found
+    :exception MultipleObjectsReturned: raises when multiple records returned on one ID
+    """
+
     if isinstance(card, Card):
         card.card_tags.remove(tags)
     elif isinstance(card, str):
@@ -393,3 +399,57 @@ def remove_tags_from_Card(card, *tags):
             msg = "Invalid ID, ID-{}".format(card)
             logging.info(msg)
             raise TypeError("[ERROR] " + msg)
+
+
+def get_rank(target):
+    """
+    get the corresponding rank title of a user according his/her score
+
+    :param target: Can use User or Profile instance as input, also allow integers
+    :type target: User | Profile | int
+
+    :return: will return a string represent
+    :rtype: str
+
+    :exception TypeError: raises when the input is not any of the above three classes
+    :exception FileNotFoundError: raises when rank.json not exists
+    :exception ObjectDoesNotExist: raises when no record found
+    :exception MultipleObjectsReturned: raises when multiple records returned on one instance
+    """
+
+    def rank(score):
+        try:
+            with open("groupH/rank.json") as f:
+                rank_dict = json.load(f)
+            for con in rank_dict:
+                if rank_dict[con]['LowerLimit'] < score <= rank_dict[con]['UpperLimit']:
+                    return rank_dict[con]['title']
+        except FileNotFoundError as e:
+            msg = "Important file(s) is missing, please double confirm the file(s) path and restart the server!\n" \
+                  "  - rank.json"
+            logging.critical(msg)
+            reraise(type(e), type(e)("[ERROR] " + msg))
+
+    if isinstance(target, User):
+        try:
+            return rank(Profile.objects.get(user=User).score)
+        except ObjectDoesNotExist as e:
+            msg = "0 records found in table:Profile with User-{}".format(target.username)
+            logging.info(msg)
+            reraise(type(e), type(e)("[ERROR] " + msg))
+        except MultipleObjectsReturned as e:
+            msg = "Multiple record found in table:Profile with User-{}".format(target.username)
+            logging.warning(msg)
+            reraise(type(e), type(e)("[ERROR] " + msg))
+    elif isinstance(target, Profile):
+        return rank(Profile.score)
+    elif isinstance(target, int):
+        return rank(target)
+    else:
+        msg = "Invalid input-{}".format(target)
+        logging.info(msg)
+        raise TypeError("[ERROR] " + msg)
+
+
+def user_register():
+    pass

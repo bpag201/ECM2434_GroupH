@@ -1,0 +1,47 @@
+{
+  "0": {
+    "LowerLimit": 0,
+    "UpperLimit": 100,
+    "title": "Iron V"
+  },
+  "1": {
+    "LowerLimit": 101,
+    "UpperLimit": 200,
+    "title": "Iron IV"
+  },
+  "2": {
+    "LowerLimit": 201,
+    "UpperLimit": 300,
+    "title": "Iron III"
+  },
+  "3": {
+    "LowerLimit": 301,
+    "UpperLimit": 400,
+    "title": "Iron II"
+  },
+  "4": {
+    "LowerLimit": 401,
+    "UpperLimit": 500,
+    "title": "Iron I"
+  },
+  "5": {
+    "LowerLimit": 501,
+    "UpperLimit": 650,
+    "title": "Bronze IV"
+  },
+  "6": {
+    "LowerLimit": 651,
+    "UpperLimit": 800,
+    "title": "Bronze III"
+  },
+  "7": {
+    "LowerLimit": 801,
+    "UpperLimit": 950,
+    "title": "Bronze II"
+  },
+  "8": {
+    "LowerLimit": 951,
+    "UpperLimit": 1100,
+    "title": "Bronze I"
+  }
+}
