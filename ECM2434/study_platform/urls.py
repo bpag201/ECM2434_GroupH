@@ -17,4 +17,5 @@ urlpatterns = [
     path('view_set/', views.view_set, name='view_set'),
     path('navigation/', views.navigation_view, name='navigation'),
     path('result/', views.result, name='result'),
+    path('leaderboard/', views.leaderboard, name='leaderboard')
 ]
