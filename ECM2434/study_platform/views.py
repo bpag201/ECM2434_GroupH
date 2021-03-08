@@ -50,7 +50,7 @@ def register_view(request):
 
             request.session['username'] = user.username  # Added to the origin file
             # login(request, user)
-            return redirect('/profile')
+            return redirect('/navigation')
     else:
         form = UserCreationForm()
     return render(request, "register.html", {'form': form})
@@ -75,7 +75,7 @@ def login_view(request):
             if user is not None:
                 request.session['username'] = user.username  # Added to the origin file
                 # login(request, user)
-                return redirect('/profile')
+                return redirect('/navigation')
             else:
                 messages.error(request, "Invalid username or password")
         else:
