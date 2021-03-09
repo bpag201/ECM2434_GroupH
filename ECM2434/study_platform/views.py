@@ -19,7 +19,6 @@ from random import sample
 '''
 
 
-# todo: 修改注册表单结构
 def register_view(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
@@ -33,6 +32,9 @@ def register_view(request):
             u = User.objects.create(username=username, first_name=fstname, last_name=sndname, email=email)
             u.set_password(raw_password=paswd)
             u.save()
+
+            p = Profile(user=u)
+            p.save()
             return redirect("profile/")
         else:
             return render(request, "register.html", {'form': form})
