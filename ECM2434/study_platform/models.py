@@ -8,7 +8,6 @@ from taggit.managers import TaggableManager
 from taggit.models import GenericUUIDTaggedItemBase, TaggedItemBase
 import uuid
 
-
 """ One thing I'm not sure: I don't know if it's appropriate to use auto_now / auto_now_add options in the 
     DateTimeFields, if someone could check if I used these options correctly it will be great. Thanks."""
 
@@ -18,11 +17,11 @@ import uuid
 """ Still trying to figure out how image fields work """
 
 
-class Course(models.Model):
-    def __init__(self, *args, **kwargs):
-        super().__init__(args, kwargs)
-        self.college = None
+class Dummy(models.Model):
+    attribute = models.CharField(max_length=20, null=True)
 
+
+class Course(models.Model):
     name = models.CharField(max_length=20)
 
 
@@ -32,30 +31,25 @@ class UserProfile(models.Model):
         STAFF = "STF", _("Staff")
         ADMIN = "ADM", _("Admin")
         WELFARE = "WEL", _("Welfare")
+    profile_id = models.AutoField(primary_key=True, )
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     nickname = models.CharField(max_length=20)
     course = models.ForeignKey(Course, on_delete=models.PROTECT)
-    score = models.IntegerField()
-    resource = models.IntegerField()
-    avatar = models.ImageField()
+    # title field is needed
+    # society field is needed
+    score = models.IntegerField(default=0)
+    resource = models.IntegerField(default=0)
+    avatar = models.ImageField(default='static/images/bex3.jpg')
     date_of_birth = models.DateField(null=True)
     user_tier = models.CharField(
         max_length=3,
         choices=Tiers.choices,
         default=Tiers.STUDENT
     )
-    REQUIRED_FIELD = ['full_name', 'email', 'nickname', 'course', 'user_tier']
+    REQUIRED_FIELD = ['user', 'nickname', 'course', 'user_tier']
 
-   
     # inventory: I plan to implement inventory by calling the user.reward_set.all() function which returns all related
     # loots
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(args, kwargs)
-        self.team = None
-
-    def __str__(self):
-        return self.full_name
 
 
 class Team(models.Model):
@@ -78,44 +72,44 @@ class College(models.Model):
     And belongs to one college / has one author"""
 
 
-class Blog(models.Model):
-    class Categories(models.TextChoices):
-        STUDYNOTE = "STN", _("Study Note")
-
-    post_to = models.ForeignKey(College, on_delete=models.CASCADE)
-    title = models.CharField(max_length=20)
-    category = models.CharField(max_length=3, choices=Categories.choices, default=Categories.STUDYNOTE)
-    content = models.TextField()
-    #author = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name="author")  # If we allow multiple participants then don't use this
-    participants = models.ManyToManyField(UserProfile)                       # Well ...
-    updated_on = models.DateTimeField(auto_now=True)
-    created_on = models.DateTimeField(auto_now_add=True)
-    upvotes = models.IntegerField()
-
-    def __str__(self):
-        return self.title
+# class Blog(models.Model):
+#     class Categories(models.TextChoices):
+#         STUDYNOTE = "STN", _("Study Note")
+#
+#     post_to = models.ForeignKey(College, on_delete=models.CASCADE)
+#     title = models.CharField(max_length=20)
+#     category = models.CharField(max_length=3, choices=Categories.choices, default=Categories.STUDYNOTE)
+#     content = models.TextField()
+#     # author = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name="author")  # If we allow multiple participants then don't use this
+#     participants = models.ManyToManyField(UserProfile)  # Well ...
+#     updated_on = models.DateTimeField(auto_now=True)
+#     created_on = models.DateTimeField(auto_now_add=True)
+#     upvotes = models.IntegerField()
+#
+#     def __str__(self):
+#         return self.title
 
 
 """ Blog specified for teams """
 
 
-class TeamBlog(models.Model):
-    title = models.CharField(max_length=20)
-    content = models.TextField()
-    #author = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)  # If we allow multiple participants then don't use this
-    participants = models.ManyToManyField(UserProfile)                  # Well ...
-    team = models.ForeignKey(Team, null=True, on_delete=models.SET_NULL)
-    updated_on = models.DateTimeField(auto_now=True)
-    created_on = models.DateTimeField(auto_now_add=True)
+# class TeamBlog(models.Model):
+#     title = models.CharField(max_length=20)
+#     content = models.TextField()
+#     # author = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)  # If we allow multiple participants then don't use this
+#     participants = models.ManyToManyField(UserProfile)  # Well ...
+#     team = models.ForeignKey(Team, null=True, on_delete=models.SET_NULL)
+#     updated_on = models.DateTimeField(auto_now=True)
+#     created_on = models.DateTimeField(auto_now_add=True)
 
 
 """ Each comment belongs to one blog and has one author """
 
 
-class Comment(models.Model):
-    author = models.ForeignKey(UserProfile, null=True, on_delete=models.SET_NULL)
-    content = models.TextField()
-    created_on = models.DateTimeField(auto_now=True)
+# class Comment(models.Model):
+#     author = models.ForeignKey(UserProfile, null=True, on_delete=models.SET_NULL)
+#     content = models.TextField()
+#     created_on = models.DateTimeField(auto_now=True)
 
 
 class Quiz(models.Model):
@@ -203,24 +197,24 @@ class Accessory(models.Model):
 class Mod(models.Model):
     name = models.CharField(max_length=20)
     description = models.TextField()
-    effect = models.CharField(max_length=20)  # Assuming effects can be applied by changing some parameters. 
+    effect = models.CharField(max_length=20)  # Assuming effects can be applied by changing some parameters.
     accessory = models.ForeignKey(Accessory, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
-    
-    
+
+
 class UserTitle(models.Model):
     content = models.CharField(max_length=20)
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.content
-    
-    
+
+
 class QuizTag():
     content = models.CharField(max_length=20)
-    quiz = models.ForeignKey(Quiz,on_delete=models.CASCADE)
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
 
 
 """ User might be assigned to a team, this creates a column to store the corresponding information """
@@ -228,12 +222,12 @@ UserProfile.team = models.ForeignKey(Team, null=True, on_delete=models.SET_NULL)
 """ Create column to let courses bind with colleges """
 Course.college = models.ForeignKey(College, on_delete=models.CASCADE)
 
+
 # Shouldn't reference User directly so we use this instead
 # User = get_user_model()
 
 
 class Tag(GenericUUIDTaggedItemBase, TaggedItemBase):
-
     class Meta:
         verbose_name = _("Tag")
         verbose_name_plural = _("Tags")
@@ -274,11 +268,11 @@ class Collection(models.Model):
 
 class Blog(models.Model):
     blog_id = models.UUIDField(primary_key=True, default=uuid.uuid4(), editable=False)
-    blog_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    blog_user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     blog_tags = TaggableManager(blank=True, through=Tag)
     blog_pin = models.BooleanField(default=False)
 
-    blog_title = models.CharField(max_length=64)
+    blog_title = models.CharField(max_length=64,null=True)
     blog_content = models.TextField()
     blog_time = models.DateTimeField(auto_now=True)
 
@@ -288,9 +282,9 @@ class Blog(models.Model):
 
 class Comment(models.Model):
     comt_id = models.UUIDField(primary_key=True, default=uuid.uuid4(), editable=False)
-    comt_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    comt_user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     comt_type = models.CharField(max_length=1)  # C-comment, R-reply, P-post
-    comt_father_id = models.CharField(max_length=64)
+    comt_father_id = models.CharField(max_length=64, null=True)
     comt_content = models.TextField()
     comt_time = models.DateTimeField(auto_now=True)
     comt_like = models.IntegerField()

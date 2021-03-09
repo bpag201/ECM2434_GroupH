@@ -4,7 +4,8 @@ import uuid
 
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
-from groupH.models import Collection, Card, Comment, Blog, Option, User
+from .models import Collection, Card, Comment, Blog, Option, User
+
 # from study_platform.models import Collection, Card, Comment, Blog, Option
 
 
@@ -28,10 +29,8 @@ def reraise(exc_type, exc_value, exc_traceback=None):
 def id_style_check(i):
     """
     check the style of id
-
     :param i: a string of id. The id should be a 32-bit long string(Hexadecimal) or 36-bit long contain '-'
     :type i: str
-
     :return: a boolean value representing whether the ID is valid or not
     :rtype: bool
     """
@@ -42,13 +41,10 @@ def id_style_check(i):
 def get_all_cards(collection):
     """
     Get a list of all cards in a specified collection
-
     :param collection: a Collection instance, or a 32/36-bit length string represent collection id
     :type collection: Collection | UUID | str
-
     :return: a list of card instances in the collection, will return an empty list if no cards found
     :rtype: list[Card]
-
     :exception TypeError: raises when the input is not a valid id or collection instance
     :exception ObjectDoesNotExist: raises when no record found
     :exception MultipleObjectsReturned: raises when multiple records returned on one ID
@@ -85,13 +81,10 @@ def get_all_cards(collection):
 def get_options(card):
     """
     Get all options of a specified card.
-
     :param card: a Card instance, or a 32/36-bit length string represent card id
     :type card: Card | str | UUID
-
     :return: a list of options, will return an empty list if no options found
     :rtype: list[Option]
-
     :exception TypeError: raises when the input is not a valid id or collection instance
     :exception ObjectDoesNotExist: raises when no record found
     :exception MultipleObjectsReturned: raises when multiple records returned on one ID
@@ -128,10 +121,8 @@ def get_options(card):
 def get_options_list(card_list):
     """
     get all options in a list of card
-
     :return: a list of option list
     :rtype: list[list[Option]]
-
     :exception TypeError: raises when the input is not a valid id or collection instance
     :exception ObjectDoesNotExist: raises when no record found
     :exception MultipleObjectsReturned: raises when multiple records returned on one ID
@@ -146,16 +137,12 @@ def get_options_list(card_list):
 def add_card2coll(card, collection):
     """
     Insert a card to collection
-
     :param card: a Card instance, or a 32/36-bit length string represent card id
     :type card: Card | str
-
     :param collection: a Collection instance, or a 32/36-bit length string represent collection id
     :type collection: Collection | str
-
     :return: a Collection instance
     :rtype: Collection
-
     :exception TypeError: raises when the input is not a valid id or collection instance
     :exception ObjectDoesNotExist: raises when no records found
     :exception MultipleObjectsReturned: raises when several records found with a same ID
@@ -214,10 +201,8 @@ def get_next_comt(father_id):
     """
     :param father_id: a 32/36-bit length id represented an instance of father_type
     :type father_id: str | Card | Blog | Comment
-
     :return: a comment followed by the father_id
     :rtype: Comment
-
     :exception TypeError: raises when the input is not a valid id or collection instance
     :exception ObjectDoesNotExist: raises when no record found
     :exception MultipleObjectsReturned: raises when multiple records returned on one ID
@@ -254,23 +239,17 @@ def get_next_comt(father_id):
 def get_all_comt(father_id, amount=0):
     """
     get comments by a enter a ID.
-
     amount:
         - amount > 0: returns the specified number of comments
         - amount = 0: returns all comments
         - amount < 0: raises a ValueError
-
     ------------
-
     :param father_id: a 32/36-bit length id represented an instance of father_type
     :type father_id: str | Card | Comment | Blog
-
     :param amount: an integer representing the number of records to be searched. The default is 0.
     :type amount: int
-
     :return: a list of comment instances
     :rtype: list[Comment]
-
     :exception ValueError: raises when the input is negative
     :exception TypeError: raises when the input is not a valid id or collection instance
     :exception ObjectDoesNotExist: raises when no record found
@@ -319,10 +298,8 @@ def get_all_comt(father_id, amount=0):
 def get_card_by_tag(*tags):
     """
     Return a list of cards contains all tags
-
     :param tags: one or more tags
     :type tags: str | Tag
-
     :return: a list of cards, can be empty
     :rtype: list[Card]
     """
@@ -331,19 +308,19 @@ def get_card_by_tag(*tags):
     return result
 
 
-def add_tags_to_Card(card, *tags):
+def get_coll_by_tag(*tags):
+    return list(Collection.objects.filter(coll_tags__name__in=tags).distinct())
+
+
+def add_tags_to_card(card, *tags):
     """
     add one or more tag to a specified card
-
     :param card: a ID string or Card instance
     :type card: str | Card
-
     :param tags: one or more string or Tag instance
     :type tags: str | Tag
-
     :return: The updated Card
     :rtype: Card
-
     :exception TypeError: raises when the input is not a valid id or collection instance
     :exception ObjectDoesNotExist: raises when no record found
     :exception MultipleObjectsReturned: raises when multiple records returned on one ID
@@ -371,7 +348,7 @@ def add_tags_to_Card(card, *tags):
             raise TypeError("[ERROR] " + msg)
 
 
-def remove_tags_from_Card(card, *tags):
+def remove_tags_from_card(card, *tags):
     if isinstance(card, Card):
         card.card_tags.remove(tags)
     elif isinstance(card, str):
@@ -391,5 +368,53 @@ def remove_tags_from_Card(card, *tags):
                 reraise(type(e), type(e)("[ERROR] " + msg))
         else:
             msg = "Invalid ID, ID-{}".format(card)
+            logging.info(msg)
+            raise TypeError("[ERROR] " + msg)
+
+
+def add_tags_to_coll(coll, *tags):
+    if isinstance(coll, Collection):
+        coll.coll_tags.add(tags)
+    elif isinstance(coll, str):
+        if id_style_check(coll):
+            coll = uuid.UUID(coll)
+            try:
+                c = Card.objects.get(card_id=coll)
+                c.card_tags.add(tags)
+                return c
+            except ObjectDoesNotExist as e:
+                msg = "0 records found in table:Card with ID-{}".format(coll)
+                logging.info(msg)
+                reraise(type(e), type(e)("[ERROR] " + msg))
+            except MultipleObjectsReturned as e:
+                msg = "Multiple record found in table:Card with ID-{}".format(coll)
+                logging.warning(msg)
+                reraise(type(e), type(e)("[ERROR] " + msg))
+        else:
+            msg = "Invalid ID, ID-{}".format(coll)
+            logging.info(msg)
+            raise TypeError("[ERROR] " + msg)
+
+
+def remove_tags_from_coll(coll, *tags):
+    if isinstance(coll, Collection):
+        coll.coll_tags.remove(tags)
+    elif isinstance(coll, str):
+        if id_style_check(coll):
+            coll = uuid.UUID(coll)
+            try:
+                c = Collection.objects.get(coll_id=coll)
+                c.card_tags.remove(tags)
+                return c
+            except ObjectDoesNotExist as e:
+                msg = "0 records found in table:Card with ID-{}".format(coll)
+                logging.info(msg)
+                reraise(type(e), type(e)("[ERROR] " + msg))
+            except MultipleObjectsReturned as e:
+                msg = "Multiple record found in table:Card with ID-{}".format(coll)
+                logging.warning(msg)
+                reraise(type(e), type(e)("[ERROR] " + msg))
+        else:
+            msg = "Invalid ID, ID-{}".format(coll)
             logging.info(msg)
             raise TypeError("[ERROR] " + msg)

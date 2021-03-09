@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends 'nav_bar_for_navigation_page.html' %}
+{% load static %}
+{% block head %}
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="{% static 'bs5/bootstrap.css' %}">
+    <title>View Your Card Sets</title>
+{{ block.super }}
+</head>
+{% endblock %}
+{% block body %}
+<body>
+  <div class="container" style="
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+   text-align: left;
+   min-height: 100vh;">
+      {% for myset in my_sets %}
+      <div class="row">
+          <div class="col">
+              <div class="card-set shadow card my-2" style="width: 40rem"> <!-- TODO:change width to fit phones -->
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-3" style="text-align: center">
+                            <img class="img-fluid rounded-circle" src="{{ myset.coll_creator.userprofile.avatar }}" alt="" style="height: 5rem; width: 5rem">
+                            <h4>{{ myset.coll_creator.userprofile.nickname }}</h4>
+                            <small class="text-muted">{{ myset.coll_create_date.date}}</small>
+                            <small></small>
+                        </div>
+                        <div class="col">
+                            <div class="row">
+                                <div class="col-3">
+                                    <h4 class="card-title">{{ myset.coll_title }}</h4>
+                                </div>
+                                <div class="col">
+                                    <!-- TODO: for all tags in one card-set -->
+                                    {% for tag in myset.coll_tags.all %}
+                                        <span class="mx-1 tags badge bg-warning float-end">{{ tag }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <p class="card-text">{{ myset.coll_description }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <form method="post" id="del_form{{ myset.coll_id }}"> {% csrf_token %}
+                        <input type="hidden" name="source" value="delete">
+                        <input type="hidden" name="del_id" value="{{ myset.coll_id }}">
+                    </form>
+                    <button class="float-end btn btn-link link-danger" type="submit" form="del_form{{ myset.coll_id }}">Delete</button>
+                    <form action="{% url 'study_platform:edit_set' %}" method="post" id="edit_form{{ myset.coll_id }}"> {% csrf_token %}
+                        <input type="hidden" name="coll_id" value="{{ myset.coll_id }}">
+                    </form>
+                    <button class="float-end btn btn-link link-warning" type="submit" form="edit_form{{ myset.coll_id }}">Edit</button>
+                </div>
+            </div>
+          </div>
+      </div>
+      {% endfor %}
+  <div class="row my-3">
+      <div class="col-auto">
+          <button class="float-end btn btn-outline-success" id="new_coll">Add a new set</button>
+      </div>
+      <div class="col-auto">
+          <button class="btn btn-outline-secondary" onclick="window.location.href=''">Back</button>
+      </div>
+  </div>
+  <hr>
+  <div class="row mb-3" style="width: 40rem">
+      <div class="col">
+          <div class="card" id="new_coll_form" style="display: none">
+              <div class="card-body">
+                  <form  method="post" id="new_coll_form"> {# TODO:add validation #} {% csrf_token %}
+                      <input type="hidden" name="source" value="add">
+                      <label for="coll_title">Title: </label>
+                      <input class="form-control" type="text" name="coll_title" id="coll_title">
+                      <label for="coll_title">Description: </label>
+                      <input class="form-control" type="text" name="coll_description" id="coll_description">
+                      <label for="coll_title">Tags: </label>
+                      <input class="form-control" type="text" name="tags" id="tags" placeholder="use comma to separate tags. e.g. BSc Comp, ECM2434">
+                      <button class="my-2 btn btn-outline-success" type="submit">Confirm</button>
+                  </form>
+              </div>
+          </div>
+      </div>
+  </div>
+  </div>
+<script>
+    document.getElementById("new_coll").addEventListener('click',displayNewCollForm);
+
+    function displayNewCollForm(){
+        let x = document.getElementById("new_coll_form");
+        if(x.style.display === "none"){
+            x.style.display = "block";
+        }else{
+            x.style.display = "none";
+        }
+    }
+</script>
+</body>
+{% endblock %}
+</html>
