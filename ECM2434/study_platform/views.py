@@ -8,6 +8,7 @@ from .utils import paging, get_page
 from .forms import User
 from .models import *
 from .api import *
+from .loot_algorithm import get_loot
 import json
 from random import sample
 
@@ -164,9 +165,6 @@ def profile_view(request):
 """ the following pages are solely web pages which has no communication with the database yet, but only skeletons
     which describes what the corresponding functions should look like. """
 
-
-def shop(request):
-    return render(request, 'shop.html')
 
 
 def answer_quiz(request):
@@ -362,3 +360,45 @@ def edit_set(request):
         return render(request, 'edit_set.html', pars)
     else:
         return redirect('study_platform:home')
+
+'''
+    Sets the given user's resources (currency) to the given value
+'''
+def set_resource(request):
+    print("Started set")
+    if request.session.get('username', None) is not None:
+        cur_user = get_object_or_404(User, username=request.session.get('username'))
+        cur_user_profile = get_object_or_404(UserProfile, user=cur_user)
+
+        with open(r"C:\Users\Bethany\OneDrive\Documents\GitHub\ECM2434_GroupH\ECM2434\study_platform\static\resource_json.json", 'r') as file:
+            json_file = json.load(file)
+            resource = json_file['resource']
+   
+            cur_user_profile.resource = resource
+            cur_user_profile.save()
+        
+    return redirect('study_platform:shop')
+
+'''
+    Gets the given user's resources
+'''
+def get_resource(user):
+    if user is not None:
+        return user.resource
+
+def shop(request):
+    if request.session.get('username', None) is not None:
+        user = get_object_or_404(User, username=request.session.get('username'))
+        user_profile = get_object_or_404(UserProfile, user=user)
+        resource = get_resource(user_profile)
+        loot = str(get_loot())
+        print("loot " + loot)
+        pars = {
+           "resource": resource,
+           "loot_url": loot
+        }
+
+        return render(request, 'shop.html', pars)
+    else:
+        return redirect('study_platform:home')
+

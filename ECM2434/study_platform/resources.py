@@ -1,26 +1,22 @@
-from .models import UserProfile
-from django.contrib.auth.models import User
+import json
+import os
 
-'''
-    Sets the given user's resources (currency) to the given value
-'''
-def set_resource(resource, username):
-    UserProfile.objects
-    User.objects
+def set_resource_test():
+    #cur_user = get_object_or_404(User, username='test50')
+    #cur_user_profile = get_object_or_404(UserProfile, user=cur_user)
+    print(__file__)
+    script_dir = os.getcwd()
+    print(script_dir)
+    file_path = os.path.join(script_dir, r'\static\resource_json.json')
+    print(file_path)
 
-    user = UserProfile(user=User(username=username))
+    with open(file_path, 'r') as file:
+        json_file = json.load(file)
+        resource = json_file['resource']
+        print(resource)
+        print(__file__)
+  
+    #    cur_user_profile.resource = resource
+    #    cur_user_profile.save()
 
-    user.resource = resource
-    user.save()
-
-'''
-    Get's the given user's resources
-'''
-def get_resource(username):
-    UserProfile.objects
-    User.objects
-
-    user = UserProfile(user=User(username=username))
-
-    resource = user.resource
-    return resource
+set_resource_test()
