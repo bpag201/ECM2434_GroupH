@@ -12,13 +12,6 @@ import json
 from random import sample
 
 
-# Create your views here.
-'''
-    This is the view used to authenticate and create a new user when they register. If the registration is authenticated
-    then the user is logged in and taken to their profile page.
-'''
-
-
 def register_view(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
@@ -43,38 +36,25 @@ def register_view(request):
     return render(request, "register.html", {'form': form})
 
 
-'''
-    This view is used to authenticate and log in a user. If login is authenticated then it takes them directly to their
-    profile page
-'''
-
-
 def login_view(request):
+    error_msg = []
     if request.method == 'POST':
-        form = AuthenticationForm(request=request, data=request.POST)
+        form = LoginForm(request.POST)
         if form.is_valid():
-
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
 
-            user = authenticate(username=username, password=password)
+            user = authenticate(request, username=username, password=password)
 
             if user is not None:
-                request.session['username'] = user.username  # Added to the origin file
-                # login(request, user)
+                login(request, user)
                 return redirect('/profile')
             else:
-                messages.error(request, "Invalid username or password")
-        else:
-            messages.error(request, "Invalid username or password")
-
-    form = AuthenticationForm()
-    return render(request, 'login.html')
-
-
-'''
-    Simply takes the user to the homepage.
-'''
+                form.errors['important'] = unpw_errmsg_mismatch
+                return render(request, 'login.html', {'form': form})
+    else:
+        form = LoginForm()
+    return render(request, 'login.html', {'form': form})
 
 
 def home_view(request):
@@ -86,16 +66,6 @@ def navigation_view(request):
 
 
 def profile_view(request):
-    """
-    input: this page is designed to be redirected by a dash-board page, which stores the current user's login credential
-    in session as 'user_login_name' (at the time I'm writing this code I assume we use the full_name in User model as
-    the login name but it is obviously not appropriate)
-    output: see pars
-    """
-
-    # TODO: 1.add missing data(i.e. society / title / collection / avatar / badge(maybe not) );
-    # TODO: 2.add function to view other profiles;
-
     if request.session.get('username', None) is not None:
         cur_user = get_object_or_404(User, username=request.session.get('username'))
         cur_user_profile = cur_user.userprofile
