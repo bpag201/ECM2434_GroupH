@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    {# <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css" /> #}
     <link rel="stylesheet" href="../static/bs5/bootstrap.css" />
     <link href='https://fonts.googleapis.com/css?family=Comfortaa' rel='stylesheet'>
 
@@ -37,44 +38,106 @@
 </head>
 <body>
     <div class = "container-fluid fill center d-flex justify-content-center align-items-center background">
-                <form method="POST"> {% csrf_token %}
-                    {{form.as_p}}
-                    <!--<div class="row"> 
-                        <h1 class="display-1 text-center">Register</h1> 
-                    </div>
-                    <br>
-                    
-                    <div class="row">
-                        <input type="text" size="30" name="username" placeholder="Username">
-                    </div>
-                    <br>
+        <form class="form" method="POST">
+            {% csrf_token %}
 
-                    <div class="row">
-                        <input type="password" name="password1" placeholder="Password">
-                    </div>
-                    <br>
+            {{ form.non_field_errors }}
+            <div class="row">
+                <div class="fieldWrapper col">
+                    <label for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
+                    {{ form.username }}
+                </div>
+            </div>
 
-                    <div class="row">
-                        <div class="d-grid gap-2 col-6 mx-auto">
-                        <input type="password" name="password2" placeholder="Password">
-                    </div>
-                    <br>-->
+            <div class="row">
+                {% if form.username.errors %}
+                    <p style="color: red; font-size: small">{{ form.username.errors.0|escape }}</p>
+                {% elif form.username.help_text %}
+                    <p style="color: dimgray; font-size: small">{{ form.username.help_text|safe }}</p>
+                {% endif %}
+            </div>
 
-                    <div class="row">
-                        <div class="d-grid gap-2 col-4 mx-auto">
-                            <button type="submit" size="10" class="btn btn-primary btn-lg">Register</button>
-                            <a href="" class="btn btn-primary btn-lg">Cancel</a>
-                        </div>
-                    </div>
-                    <br>
+            <div class="row">
+                <div class="fieldWrapper col-6">
+                    <label for="{{ form.fstname.id_for_label }}">{{ form.fstname.label }}</label>
+                    {{ form.fstname }}
+                </div>
 
-                    <div class="row">
-                        <p class="text-center">Already registered? Login <a href="/login"> here </a> </p>
-                    </div>
-                </form>
+                <div class="fieldWrapper col-6">
+                    <label for="{{ form.sndname.id_for_label }}">{{ form.sndname.label }}</label>
+                    {{ form.sndname }}
+                </div>
+            </div>
+
+            <div class="row">
+                {% if form.fstname.errors%}
+                    <p style="color: red; font-size: small">{{ form.fstname.errors.0|escape }}</p>
+                {% elif form.sndname.errors %}
+                    <p style="color: red; font-size: small">{{ form.sndname.errors.0|escape }}</p>
+                {% else %}
+                    <p> </p>
+                {% endif %}
+            </div>
+
+
+            <div class="row">
+                <div class="fieldWrapper col">
+                    <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+                    {{ form.email }}
+                </div>
+            </div>
+
+            <div class="row">
+                {% if form.email.errors %}
+                    <p style="color: red; font-size: small">{{ form.email.errors.0|escape }}</p>
+                {% else %}
+                    <p> </p>
+                {% endif %}
+            </div>
+
+            <div class="row">
+                <div class="fieldWrapper col-6">
+                    <label for="{{ form.paswd1.id_for_label }}">{{ form.paswd1.label }}</label>
+                    {{ form.paswd1 }}
+                </div>
+
+                <div class="fieldWrapper col-6">
+                    <label for="{{ form.paswd2.id_for_label }}">{{ form.paswd2.label }}</label>
+                    {{ form.paswd2 }}
+                </div>
+            </div>
+
+            <div class="row">
+                {% if form.paswd1.errors%}
+                    <p style="color: red; font-size: small">{{ form.paswd1.errors.0|escape }}</p>
+                {% elif form.paswd2.errors %}
+                    <p style="color: red; font-size: small">{{ form.paswd2.errors.0|escape }}</p>
+                {% elif form.paswd1.help_text %}
+                    <p style="color: dimgray; font-size: small">{{ form.paswd1.help_text|safe }}</p>
+                {% endif %}
+            </div>
+
+            <br>
+
+            <div class="row">
+                <div class="col-6">
+                    <button type="submit" size="10" class="btn btn-primary btn-lg" style="width: 100%">Register</button>
+                </div>
+
+                <div class="col-6">
+                    <a href="" size="10" class="btn btn-primary btn-lg" style="width: 100%">Cancel</a>
+                </div>
+            </div>
+
+            <br>
+
+            <div class="row">
+                <p class="text-center">Already registered? Login <a href="/login"> here </a> </p>
+            </div>
+        </form>
     </div>
 
-    
-   </script> <script src="../static/bs5/bootstrap.js"></script>
+    {# <script src="../static/bootstrap/js/bootstrap.min.js"></script> #}
+    <script src="../static/bs5/bootstrap.js"></script>
 </body>
 </html>
