@@ -30,13 +30,10 @@ def register_view(request):
             paswd = form.cleaned_data['paswd1']
             email = form.cleaned_data['email']
 
-            try:
-                u = User.objects.create(username=username, first_name=fstname, last_name=sndname, email=email)
-                u.set_password(raw_password=paswd)
-                u.save()
-                return redirect("profile/")
-            except IntegrityError as e:
-                return render()
+            u = User.objects.create(username=username, first_name=fstname, last_name=sndname, email=email)
+            u.set_password(raw_password=paswd)
+            u.save()
+            return redirect("profile/")
         else:
             return render(request, "register.html", {'form': form})
     else:
