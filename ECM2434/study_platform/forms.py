@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
+from django.core.validators import EmailValidator
 from django.http import HttpResponseRedirect
 from django.core.exceptions import ValidationError
 from django.shortcuts import render
@@ -50,6 +51,7 @@ class RegisterForm(forms.Form):
                              })
     email = forms.EmailField(required=True,
                              label="E-mail",
+                             validators=[EmailValidator],
                              widget=forms.TextInput(attrs={'class': 'form-control'}),
                              error_messages={
                                  "required": email_errmsg_require,
@@ -67,6 +69,8 @@ class RegisterForm(forms.Form):
         email = self.cleaned_data.get('email')
         if User.objects.filter(email=email):
             raise ValidationError(email_errmsg_exist)
+        else:
+            return email
 
     def clean_paswd1(self):
         pwd = self.cleaned_data.get('paswd1')
