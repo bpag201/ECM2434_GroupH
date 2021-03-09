@@ -37,7 +37,6 @@ def register_view(request):
 
 
 def login_view(request):
-    error_msg = []
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
