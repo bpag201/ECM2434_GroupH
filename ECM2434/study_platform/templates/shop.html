@@ -50,7 +50,7 @@
               <div class="card flip-card effect-on-active" style='width: 8rem; height: 16rem;'>
                 <div class="card-body front" style='background-size: 8rem 16rem; background-image: url("{% static 'images/Card_Back.png' %}")'>
                 </div>
-                <div class="card-body back" style='background-size: 8rem 16rem; background-image: url("{% static 'images/rewards/Moustache/Brown moustache.png' %}")'>
+                <div class="card-body back" style='background-size: 8rem 16rem; background-image: url("{% static 'images/' %}{{ loot_url }}")'>
                 </div>
               </div>
             </div>
@@ -71,9 +71,11 @@
   <script src="{% static 'bs5/bootstrap.js' %}"></script>
   <script>
       let resource = "{{ resource }}";
+      let loot_name = "{{ loot_name }}";
+      let loot_url = "{{ loot_url }}";
 
       function set_current_resource(){
-          window.location.href='{% url 'study_platform:set_resource' %}'
+          window.location.href="{% url 'study_platform:set_resource' resource=resource accessory_name=loot_name accessory_url=loot_url %}";
       }
 
       function display(){

@@ -13,19 +13,19 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.CreateModel(
-            name='UserProfile',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('nickname', models.CharField(max_length=20)),
-                ('score', models.IntegerField()),
-                ('resource', models.IntegerField()),
-                ('avatar', models.ImageField(upload_to='')),
-                ('user_tier', models.CharField(choices=[('STU', 'Student'), ('STF', 'Staff'), ('ADM', 'Admin'), ('WEL', 'Welfare')], default='STU', max_length=3)),
-                ('course', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='study_platform.course')),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
-            ],
-        ),
+        # migrations.CreateModel(
+        #     name='UserProfile',
+        #     fields=[
+        #         ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+        #         ('nickname', models.CharField(max_length=20)),
+        #         ('score', models.IntegerField()),
+        #         ('resource', models.IntegerField()),
+        #         ('avatar', models.ImageField(upload_to='')),
+        #         ('user_tier', models.CharField(choices=[('STU', 'Student'), ('STF', 'Staff'), ('ADM', 'Admin'), ('WEL', 'Welfare')], default='STU', max_length=3)),
+        #         ('course', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='study_platform.course')),
+        #         ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+        #     ],
+        # ),
         migrations.AlterField(
             model_name='achievement',
             name='user',

@@ -14,7 +14,7 @@ urlpatterns = [
     path('flash_card/', views.flash_card, name='flash_card'),           # For viewing a flash card set, which could also
                                                                         # be used for quiz cards
     path('get_resource/', views.get_resource, name='get_resource'),     # For getting the resources from the database
-    path('set_resource/', views.set_resource, name='set_resource'),     # For setting the user's resources to the given resource
+    path('set_resource/<int:resource>/<str:accessory_name>/<path:accessory_url>/', views.set_resource, name='set_resource'),     # For setting the user's resources to the given resource
     path('edit_set/', views.edit_set, name='edit_set'),
     path('view_set/', views.view_set, name='view_set'),
     path('navigation/', views.navigation_view, name='navigation'),

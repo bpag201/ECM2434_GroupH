@@ -45,6 +45,6 @@ def get_loot():
     reward_url = alloc.json[t][reward]
     print(reward)
     print(reward_url)
-    return reward_url
+    return reward_url, reward
 
 get_loot()

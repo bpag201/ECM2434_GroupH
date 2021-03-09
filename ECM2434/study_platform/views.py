@@ -44,9 +44,13 @@ def register_view(request):
             # user.first_name = first_name
             # user.email = email
 
-            user_course_test = Course(name="BSC_TEST")
+            try:
+                user_course_test = Course.objects.get(name="BSC_TEST")
+            except Course.DoesNotExist:
+                user_course_test = Course(name="BSC_TEST")
+                user_course_test.save()
+
             user_profile = UserProfile(user=user, nickname=username, course=user_course_test, score=0, resource=0)
-            user_course_test.save()
             user_profile.save()
 
             request.session['username'] = user.username  # Added to the origin file
@@ -364,19 +368,19 @@ def edit_set(request):
 '''
     Sets the given user's resources (currency) to the given value
 '''
-def set_resource(request):
+def set_resource(request, resource, accessory_name=None, accessory_url=None):
     print("Started set")
     if request.session.get('username', None) is not None:
         cur_user = get_object_or_404(User, username=request.session.get('username'))
         cur_user_profile = get_object_or_404(UserProfile, user=cur_user)
 
-        with open(r"C:\Users\Bethany\OneDrive\Documents\GitHub\ECM2434_GroupH\ECM2434\study_platform\static\resource_json.json", 'r') as file:
-            json_file = json.load(file)
-            resource = json_file['resource']
-   
-            cur_user_profile.resource = resource
-            cur_user_profile.save()
+        print(resource)
+        cur_user_profile.resource = resource
+        cur_user_profile.save()
+        print("saved")
         
+        assign_accessory(cur_user_profile, accessory_name, accessory_url)
+
     return redirect('study_platform:shop')
 
 '''
@@ -391,14 +395,21 @@ def shop(request):
         user = get_object_or_404(User, username=request.session.get('username'))
         user_profile = get_object_or_404(UserProfile, user=user)
         resource = get_resource(user_profile)
-        loot = str(get_loot())
-        print("loot " + loot)
+        loot_url,loot_name = get_loot()
+        loot_url = str(loot_url)
+        loot_name = str(loot_name)
+        print("loot " + loot_name + " " + loot_url)
         pars = {
            "resource": resource,
-           "loot_url": loot
+           "loot_url": loot_url,
+           "loot_name": loot_name
         }
 
         return render(request, 'shop.html', pars)
     else:
         return redirect('study_platform:home')
 
+def assign_accessory(user, accessory_name, accessory_url):
+    if user is not None:
+        acc = Accessory(name=accessory_name, graphic=accessory_url, user=user)
+        acc.save()

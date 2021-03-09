@@ -162,46 +162,45 @@ class Achievement(models.Model):
 """ Loots """
 
 
-class Reward(models.Model):
-    class Effect(models.TextChoices):
-        EMPTY = "EMP", _("Empty")
-        POLICE = "POL", _("Police")
-        THIEF = "THF", _("Thief")
-        SHIELD = "SHD", _("Shield")
-        BLIND = "BLN", _("Blind")
-        BOOST = "BST", _("Boost")
+# class Reward(models.Model):
+#     class Effect(models.TextChoices):
+#         EMPTY = "EMP", _("Empty")
+#         POLICE = "POL", _("Police")
+#         THIEF = "THF", _("Thief")
+#         SHIELD = "SHD", _("Shield")
+#         BLIND = "BLN", _("Blind")
+#         BOOST = "BST", _("Boost")
 
-    name = models.CharField(max_length=20)
-    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-    is_tool = models.BooleanField()
-    description = models.TextField()
-    # has_mods -> I don't think we need this as we only need to bind mods to a reward
-    effect = models.CharField(max_length=3, choices=Effect.choices, default=Effect.EMPTY)
-    graphic = models.ImageField()
+#     name = models.CharField(max_length=20)
+#     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+#     is_tool = models.BooleanField()
+#     description = models.TextField()
+#     # has_mods -> I don't think we need this as we only need to bind mods to a reward
+#     effect = models.CharField(max_length=3, choices=Effect.choices, default=Effect.EMPTY)
+#     graphic = models.ImageField()
 
-    def __str__(self):
-        return self.name
+#     def __str__(self):
+#         return self.name
 
 
 class Accessory(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
     graphic = models.ImageField()
-    has_mods = models.BooleanField()
-    target = models.ForeignKey(Reward, on_delete=models.CASCADE)
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, default=None)
 
     def __str__(self):
         return self.name
 
 
-class Mod(models.Model):
-    name = models.CharField(max_length=20)
-    description = models.TextField()
-    effect = models.CharField(max_length=20)  # Assuming effects can be applied by changing some parameters.
-    accessory = models.ForeignKey(Accessory, on_delete=models.CASCADE)
+# class Mod(models.Model):
+#     name = models.CharField(max_length=20)
+#     description = models.TextField()
+#     effect = models.CharField(max_length=20)  # Assuming effects can be applied by changing some parameters.
+#     accessory = models.ForeignKey(Accessory, on_delete=models.CASCADE)
 
-    def __str__(self):
-        return self.name
+#     def __str__(self):
+#         return self.name
 
 
 class UserTitle(models.Model):
@@ -287,4 +286,4 @@ class Comment(models.Model):
     comt_father_id = models.CharField(max_length=64, null=True)
     comt_content = models.TextField()
     comt_time = models.DateTimeField(auto_now=True)
-    comt_like = models.IntegerField()
+    comt_like = models.IntegerField(default=0)
