@@ -70,27 +70,32 @@
   <script src="https://unpkg.com/@popperjs/core@2.4.0/dist/umd/popper.min.js"></script>
   <script src="{% static 'bs5/bootstrap.js' %}"></script>
   <script>
-      let resource = "{{ resource }}";
+      let gold = "{{ resource }}";
       let loot_name = "{{ loot_name }}";
       let loot_url = "{{ loot_url }}";
 
       function set_current_resource(){
-          window.location.href="{% url 'study_platform:set_resource' resource=resource accessory_name=loot_name accessory_url=loot_url %}";
+          console.log(gold);
+          console.log(Number(gold));
+          console.log("'study_platform:set_resource' gold loot_name loot_url".replace("gold", Number(gold)));
+          let url_str = "'study_platform:set_resource' resource="+gold+" accessory_name=loot_name accessory_url=loot_url";
+          window.location.href='/set_resource/'+Number(gold)+'/'+loot_name+'/'+loot_url;
+          
       }
 
       function display(){
-          if(resource>=50){
+          if(gold>=50){
               firstTimeDraw = true;
-              resource -= 50;
+              gold -= 50;
               updateGold();
 
               /* send resource via post request */
-              let xhr = new XMLHttpRequest();
-              xhr.open("POST", "C:\Users\Bethany\OneDrive\Documents\GitHub\ECM2434_GroupH\ECM2434\study_platform\static\resource_json.json", true); // TODO:change null to a real url
-              xhr.setRequestHeader('Content-Type', 'application/json');
-              xhr.send(JSON.stringify({
-                  "resource": resource
-              }));
+              // let xhr = new XMLHttpRequest();
+              // xhr.open("POST", "C:\Users\Bethany\OneDrive\Documents\GitHub\ECM2434_GroupH\ECM2434\study_platform\static\resource_json.json", true); // TODO:change null to a real url
+              // xhr.setRequestHeader('Content-Type', 'application/json');
+              // xhr.send(JSON.stringify({
+              //     "resource": resource
+              // }));
               
 
               let x = document.getElementById("cards");
@@ -112,8 +117,8 @@
       }
 
       function flipThis(){
-          if((resource >= 50 && !this.classList.contains("active")) || firstTimeDraw){
-              if(!firstTimeDraw) resource -= 50;
+          if((gold >= 50 && !this.classList.contains("active")) || firstTimeDraw){
+              if(!firstTimeDraw) gold -= 50;
               firstTimeDraw = false;
               updateGold();
               this.classList.add("active");
@@ -132,7 +137,7 @@
 
       function updateGold(){
           let x = document.getElementById("resource");
-          x.innerHTML = resource;
+          x.innerHTML = gold;
       }
 
       /*updateGold();*/

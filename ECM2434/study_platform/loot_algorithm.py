@@ -24,13 +24,7 @@ class LootAllocator:
 
 def choose_tier():
     alloc = TierAllocator()
-    #t = check_guarantee(alloc)
 
-    #if t is not None:
-    #    return t
-    #else:
-
-    print(alloc.tiers)
     draw = choices(alloc.tiers, alloc.probs, k=1)
     return draw[0]
 
@@ -39,12 +33,10 @@ def get_loot():
     alloc = LootAllocator()
 
     potential = list(alloc.json[t].keys())
-    print(potential)
 
     reward = choice(potential)
     reward_url = alloc.json[t][reward]
-    print(reward)
-    print(reward_url)
+
     return reward_url, reward
 
 get_loot()

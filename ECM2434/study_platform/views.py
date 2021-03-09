@@ -379,7 +379,7 @@ def set_resource(request, resource, accessory_name=None, accessory_url=None):
         cur_user_profile.save()
         print("saved")
         
-        assign_accessory(cur_user_profile, accessory_name, accessory_url)
+        #assign_accessory(cur_user_profile, accessory_name, accessory_url)
 
     return redirect('study_platform:shop')
 
@@ -398,7 +398,7 @@ def shop(request):
         loot_url,loot_name = get_loot()
         loot_url = str(loot_url)
         loot_name = str(loot_name)
-        print("loot " + loot_name + " " + loot_url)
+        #print("loot " + loot_name + " " + loot_url)
         pars = {
            "resource": resource,
            "loot_url": loot_url,
