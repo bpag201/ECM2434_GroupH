@@ -1,10 +1,10 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseNotFound
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db import IntegrityError, transaction
-from django.contrib.auth import get_user_model
+from guardian.shortcuts import assign_perm
 from .utils import paging, get_page
 from .forms import *
 from .api import *
@@ -28,7 +28,11 @@ def register_view(request):
 
             p = Profile(user=u)
             p.save()
-            return redirect("profile/")
+
+            login(request, u)
+
+            assign_perm('change_profile', u, p)
+            return redirect("/profile/"+username)
         else:
             return render(request, "register.html", {'form': form})
     else:
@@ -41,16 +45,16 @@ def login_view(request):
         form = LoginForm(request.POST)
         if form.is_valid():
             username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
-
-            user = authenticate(request, username=username, password=password)
-
+            password = form.cleaned_data.get('paswd')
+            user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-                return redirect('/profile')
+                return redirect("/profile/"+username)
             else:
-                form.errors['important'] = unpw_errmsg_mismatch
+                form.errors.important = unpw_errmsg_mismatch
                 return render(request, 'login.html', {'form': form})
+        else:
+            return render(request, 'login.html', {'form': form})
     else:
         form = LoginForm()
     return render(request, 'login.html', {'form': form})
@@ -64,56 +68,23 @@ def navigation_view(request):
     return render(request, 'navigation.html')
 
 
-def profile_view(request):
-    if request.session.get('username', None) is not None:
-        cur_user = get_object_or_404(User, username=request.session.get('username'))
-        cur_user_profile = cur_user.userprofile
-        if request.method == 'POST':  # edit profile; use bootstrap validation to this form
-            form = request.POST
-            last_name = form.get('last-name', None)
-            first_name = form.get('first-name', None)
-            avatar = form.get('avatar')
-            # cur_user_profile.title = form.get('titles'); has no effect since userProfile model has no title field
-            nickname = form.get('nickname', None)
-            date_of_birth = form.get('DOB', None)
-            email = form.get('email')
-            course = form.get('course', None)
-            team_name = form.get('team', None)
-            # cur_user_profile.society = form.get('society')
+def profile_view(request, username):
+    try:
+        target = User.objects.filter(username=username)[0]
+        profile = get_profile(target)
 
-            if last_name is not None:
-                cur_user.last_name = last_name
-            if first_name is not None:
-                cur_user.first_name = first_name
-            if avatar is not None:
-                cur_user_profile.avatar = avatar
-            if nickname is not None:
-                cur_user_profile.nickname = nickname
-            if date_of_birth is not None:
-                cur_user_profile.date_of_birth = date_of_birth
-            # if course is not None:  # TODO: create course instances
-            #     cur_user_profile.course =
-            if email is not None:
-                cur_user.email = email
-            if team_name is not None:
-                cur_user.team, created = Team.objects.get_or_create(name=team_name, manager=cur_user_profile)
-            cur_user.save()
-            cur_user_profile.save()
-        cur_user_fullname = cur_user.first_name + cur_user.last_name
-        pars = {
-            'real_name': cur_user_fullname,
-            'nick_name': cur_user_profile.nickname,
-            'email': cur_user.email,
-            'course': cur_user_profile.course.name,
-            'DOB': cur_user_profile.date_of_birth,
-            'resource': cur_user_profile.resource,
-            'achievement': cur_user_profile.achievement_set.all(),
-            'team': cur_user_profile.team.name,  # can a user join more than one team?
-            'user_tier': cur_user_profile.user_tier  # maybe wrong value
-        }
-        return render(request, "profile_me.html", pars)
-    else:
-        redirect('groupH:home')
+        args = {"user_full_name": "{} {}".format(target.first_name, target.last_name),
+                "DOB": profile.dob,
+                "user_nickname": profile.nickname,
+                "email": target.email,
+                "gold": profile.gold,
+                "perm_valid": request.user.has_perm("change_profile", profile)
+                }
+        return render(request, "profile.html", args)
+    except ObjectDoesNotExist:
+        return HttpResponseNotFound('<h1>Page not found</h1>')
+    except MultipleObjectsReturned:
+        return HttpResponseNotFound('<h1>Page not found</h1>')
 
 
 """ the following pages are solely web pages which has no communication with the database yet, but only skeletons
