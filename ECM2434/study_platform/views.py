@@ -7,6 +7,7 @@ from django.contrib.auth import get_user_model
 from .utils import paging, get_page
 from .forms import User
 from .models import UserProfile, Course
+from .avatar_assembly import assemble
 
 # Create your views here.
 
@@ -198,3 +199,39 @@ def card_set_list(request):
         "cur_page": pg_num
     }
     return render(request, 'card_sets.html', output)
+
+def creating_avatar(request, background_name=None, moustache_name=None, glasses_name=None, hat_name=None):
+    username = request.session.get('username', None)
+    if username is not None:
+        cur_user = get_object_or_404(User, username=username)
+        cur_user_profile = get_object_or_404(UserProfile, user=cur_user)
+
+        with open("all_rewards.json", 'r') as file:
+            json_file = json.load(file)
+
+            if background_name is not None:
+                background = "static/images/" + json_file[background_name]
+            else:
+                background = None
+            
+            if moustache_name is not None:
+                moustache = "static/images/" + json_file[moustache_name]
+            else:
+                moustache = None
+            
+            if glasses_name is not None:
+                glasses = "static/images/" + json_file[glasses_name]
+            else:
+                glasses = None
+            
+            if hat_name is not None:
+                hat = "static/images/" + json_file[hat_name]
+            else:
+                hat = None
+            
+        avatar = "static/Plain silhouette.png"
+        final_avatar = assemble(avatar, background, moustache, glasses, hat)
+        cur_user_profile.avatar = final_avatar
+        cur_user_profile.save()
+
+
