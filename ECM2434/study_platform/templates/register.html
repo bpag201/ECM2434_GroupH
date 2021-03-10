@@ -37,15 +37,24 @@
 </head>
 <body>
     <div class = "container-fluid fill center d-flex justify-content-center align-items-center background">
-                <form method="POST"> {% csrf_token %}
-                    {{form.as_p}}
-                    <!--<div class="row">
-                        <h1 class="display-1 text-center">Register</h1>
+                <form method="POST"> {% csrf_token %} 
+                    <div class="row"> 
+                        <h1 class="display-1 text-center">Register</h1> 
                     </div>
                     <br>
 
                     <div class="row">
-                        <input type="text" size="30" name="username" placeholder="Username">
+                        <input type="text" size="30" name="firstname" placeholder="First Name">
+                    </div>
+                    <br>
+
+                    <div class="row">
+                        <input type="text" size="30" name="surname" placeholder="Last Name">
+                    </div>
+                    <br>
+
+                    <div class="row">
+                        <input type="text" size="30" name="email" placeholder="Email">
                     </div>
                     <br>
 
@@ -54,11 +63,15 @@
                     </div>
                     <br>
 
-                    <div class="row">
-                        <div class="d-grid gap-2 col-6 mx-auto">
-                        <input type="password" name="password2" placeholder="Password">
-                    </div>
-                    <br>-->
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                        Course
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <li><a class="dropdown-item" href="#">Courses</a></li>
+                        </ul>
+                     </div>
+                    <br>
 
                     <div class="row">
                         <div class="d-grid gap-2 col-4 mx-auto">
@@ -74,6 +87,7 @@
                 </form>
     </div>
 
-    <script src="../static/bs5/bootstrap.js"></script>
+    
+    <script src="../static/bs5/bootstrap.bundle.min.js"></script>
 </body>
 </html>
