@@ -1,10 +1,10 @@
 from django import forms
+from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 from django.core.validators import EmailValidator
 from django.http import HttpResponseRedirect
 from django.core.exceptions import ValidationError
-from django.shortcuts import render
 from .texts import *
 
 
@@ -37,7 +37,7 @@ class RegisterForm(forms.Form):
     paswd1 = forms.CharField(min_length=8,
                              label="Password",
                              widget=forms.widgets.PasswordInput(attrs={'class': 'form-control'}),
-                             help_text=paswd_helptxtx,
+                             help_text=paswd_helptxt,
                              error_messages={
                                  "required": paswd_errmsg_require,
                                  "min_length": paswd_errmsg_length
@@ -85,4 +85,31 @@ class RegisterForm(forms.Form):
         else:
             return pwd2
 
+
+class LoginForm(forms.Form):
+    username = forms.CharField(max_length=150,
+                               min_length=6,
+                               label="Username",
+                               widget=forms.TextInput(attrs={'class': 'form-control'}),
+                               help_text=usenm_helptxt,
+                               error_messages={
+                                   "required": usrnm_errmsg_require,
+                                   "min_length": usrnm_errmsg_length,
+                                   "max_length": usrnm_errmsg_length
+                               })
+    paswd = forms.CharField(min_length=8,
+                            label="Password",
+                            widget=forms.widgets.PasswordInput(attrs={'class': 'form-control'}),
+                            help_text=paswd_helptxt,
+                            error_messages={
+                                "required": paswd_errmsg_require,
+                                "min_length": paswd_errmsg_length
+                            })
+
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if User.objects.filter(username=username):
+            return username
+        else:
+            raise ValidationError(usrnm_errmsg_NOT_exist)
 
