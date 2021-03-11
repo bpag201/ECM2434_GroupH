@@ -61,7 +61,7 @@
             <li class="nav-item" role="presentation">
                 <a class="nav-link" id="inventory-tab" data-bs-toggle="tab" href="#inventory" role="tab" aria-controls="inventory" aria-selected="false">Inventory</a>
             </li>
-            {% if is_self %}
+            {% if perm_valid %}
             <li class="nav-item" role="presentation">
                 <a class="nav-link" id="editProfile-tab" data-bs-toggle="tab" href="#editProfile" role="tab" aria-controls="editProfile" aria-selected="false">Edit Profile</a>
             </li>
@@ -203,6 +203,8 @@
                     </div>
                 </div>
             </div>
+
+            {% if perm_valid %}
             <div class="tab-pane fade" id="editProfile" role="tabpanel" aria-labelledby="editProfile-tab">
                 <div class="row">
                     <div class="col">
@@ -237,7 +239,7 @@
                                             </div>
                                             <div class="mb-2">
                                                 <label class="form-label" for="nickname">Nickname:</label>
-                                                <input class="form-control" type="text" name="nickname" id="nickname" maxlength="64">
+                                                <input class="form-control" type="text" name="nickname" id="nickname">
                                             </div>
                                             <div class="mb-2">
                                                 <label class="form-label" for="email">Email:</label>
@@ -245,15 +247,15 @@
                                             </div>
                                             <div class="mb-2">
                                                 <label class="form-label" for="course">Course:</label>
-                                                <input class="form-control" type="text" name="course" id="course" maxlength="64">
+                                                <input class="form-control" type="text" name="course" id="course">
                                             </div>
                                             <div class="mb-2">
                                                 <label class="form-label" for="team">Team:</label>
-                                                <input class="form-control" type="text" name="team" id="team" maxlength="64">
+                                                <input class="form-control" type="text" name="team" id="team">
                                             </div>
                                             <div class="mb-2">
                                                 <label class="form-label" for="society">Society:</label>
-                                                <input class="form-control" type="text" name="society" id="society" maxlength="64">
+                                                <input class="form-control" type="text" name="society" id="society">
                                             </div>
                                             <button class="btn btn-warning" type="submit" form="profile-form">Confirm</button>
                                         </form>
@@ -264,7 +266,7 @@
                     </div>
                 </div>
             </div>
-
+            {% endif %}
         </div>
     </div>
 </div>
