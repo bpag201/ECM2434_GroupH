@@ -5,6 +5,8 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db import IntegrityError, transaction
 from django.contrib.auth import get_user_model
+from guardian.shortcuts import assign_perm
+import uuid
 from .utils import *
 from .forms import *
 from .api import *
@@ -31,7 +33,7 @@ def register_view(request):
             p = Profile(user=u)
             p.save()
             login(request, u)
-            request.session.set_expiry(18000)
+            assign_perm('change_profile', u, p)
             return redirect('navigation')
         else:
             return render(request, "register.html", {'form': form})
@@ -145,6 +147,7 @@ def profile_view(request, username):
                     "is_self": is_self,
                     "inventory": inventory,
                     "title": profile.title,
+                    "perm_valid": request.user.has_perm("change_profile", profile)
                     }
             return render(request, "profile.html", args)
         except ObjectDoesNotExist:
@@ -185,22 +188,21 @@ def shop(request):
 def answer_quiz(request):
     if not request.user.is_anonymous:
         form = request.POST
-        try:
-            target_coll = get_object_or_404(Collection, coll_id=form.get('i', None))
-            quiz_cards = target_coll.coll_cards.filter(card_type=1)
-            if len(quiz_cards) == 0:
-                return redirect('card_set_list', invalid=1)
-            elif len(quiz_cards) < 5:
-                selected_questions = quiz_cards
-            else:
-                selected_questions = sample(quiz_cards, 5)
-        except Exception:
-            return redirect('card_set_list', invalid=2)
-
+        target_coll = get_object_or_404(Collection, coll_id=form.get('i', None))
+        quiz_cards = target_coll.coll_cards.filter(card_type=1)
+        token = str(uuid.uuid4()).replace("-", "")
+        request.session["postToken"] = token
+        if len(quiz_cards) == 0:
+            return redirect('card_set_list', invalid=1)
+        elif len(quiz_cards) < 5:
+            selected_questions = quiz_cards
+        else:
+            selected_questions = sample(quiz_cards, 5)
         pars = {
             "questions": selected_questions,
             "question_num": len(selected_questions),
             "i": form.get('i', None),
+            "postToken": token
         }
         return render(request, 'answer_quiz.html', pars)
 
@@ -213,20 +215,23 @@ def result(request):
         cur_user = request.user
         if request.method == 'POST':
             form = request.POST
+            session_token = request.session.get("postToken", default=None)
+            current_token = request.POST['postToken']
+
+            if session_token != current_token:
+                return HttpResponse("you can't post it again.")
+            del request.session['postToken']
             question_num = form.get('question_num', 0)
             quiz_result = []
             mark = 0
             for i in range(1, int(question_num) + 1):
                 answer_index = "answer" + str(i)
                 selected = form.get(answer_index, None)
-                try:
-                    selected_option = get_object_or_404(Option, opt_id=uuid.UUID(selected))
-                    if selected_option.opt_isCorrect:
-                        mark += 1  # rewards are depend on marks
-                    correct_option = selected_option.opt_cid.option_set.get(opt_isCorrect=True)
-                    quiz_result.append([selected_option.opt_content, correct_option.opt_content])
-                except Exception:
-                    pass
+                selected_option = get_object_or_404(Option, opt_id=uuid.UUID(selected))
+                if selected_option.opt_isCorrect:
+                    mark += 1  # rewards are depend on marks
+                correct_option = selected_option.opt_cid.option_set.get(opt_isCorrect=True)
+                quiz_result.append([selected_option.opt_content, correct_option.opt_content])
             pars = {
                 "ques_amount": question_num,
                 "quiz_result": quiz_result,
@@ -253,19 +258,16 @@ def flash_card(request):  # redirect output: index
             for c in Card.objects.all():
                 if str(c.card_id) == form.get('current_card'):
                     target_card = c.card_id
-            try:
-                new_comt = Comment(comt_user=cur_user, comt_type='C', comt_content=form.get('content', ""),
-                                   comt_father_id=form.get('i'),
-                                   comt_card=Card.objects.get(card_id=target_card))
-                new_comt.save()
-            except Exception:
-                pass
+                else:
+                    print("database: "+str(c.card_id))
+                    print("form: "+form.get('current_card'))
+            new_comt = Comment(comt_user=cur_user, comt_type='C', comt_content=form.get('content', ""),
+                               comt_father_id=form.get('i'),
+                               comt_card=Card.objects.get(card_id=target_card))
+            new_comt.save()
         else:
             form = request.GET
-        try:
-            target_collection = get_object_or_404(Collection, coll_id=form.get('i', None))
-        except Exception:
-            return redirect('card_set_list', invalid=2)
+        target_collection = get_object_or_404(Collection, coll_id=form.get('i', None))
         cards = get_all_cards(target_collection)
         questions = []
         answers = []
@@ -321,7 +323,7 @@ def card_set_list(request, invalid=0):
         return redirect('home')
 
 
-def view_set(request, invalid=0):
+def view_set(request):
     if not request.user.is_anonymous:
         cur_user = request.user
         if request.method == 'POST':
@@ -329,10 +331,7 @@ def view_set(request, invalid=0):
             source = form.get('source', None)
             if source == 'delete':  # when deleting a set
                 coll_id = form.get('del_id', None)
-                try:
-                    dlt_coll = get_object_or_404(Collection, coll_id=coll_id)
-                except Exception:
-                    return redirect('view_set', invalid=1)
+                dlt_coll = get_object_or_404(Collection, coll_id=coll_id)
                 dlt_coll.delete()
             elif source == 'add':
                 new_set = Collection(coll_title=form.get('coll_title'),
@@ -345,7 +344,7 @@ def view_set(request, invalid=0):
                     new_set.coll_tags.add(form_tag)
                 new_set.save()
         my_sets = list(Collection.objects.filter(coll_creator=cur_user))
-        pars = {"my_sets": my_sets, "invalid": invalid}
+        pars = {"my_sets": my_sets}
         return render(request, 'view_set.html', pars)
     else:
         return redirect('home')
@@ -363,42 +362,32 @@ def edit_set(request):
             source = form.get('source', None)
             if source == 'delete_card':  # when deleting a card
                 dlt_id = form.get('dlt_id', None)
-                try:
-                    dlt_card = get_object_or_404(Card, card_id=dlt_id)
-                    dlt_card.delete()
-                except Exception:
-                    pass
+                dlt_card = get_object_or_404(Card, card_id=dlt_id)
+                dlt_card.delete()
             elif source == 'add_card':
-                try:
-                    target_coll = get_object_or_404(Collection, coll_id=form.get('coll_id', None))
-                    new_card = Card(card_content=form.get('question'), card_type=form.get('isMultipleChoice', 0),
-                                    card_creator=cur_user)
-                    correct_option = Option(opt_cid=new_card, opt_content=form.get('correct_answer'),
-                                            opt_isCorrect=True)
-                    alt1 = Option(opt_cid=new_card, opt_content=form.get('alternative1'))
-                    alt2 = Option(opt_cid=new_card, opt_content=form.get('alternative2'))
-                    alt3 = Option(opt_cid=new_card, opt_content=form.get('alternative3'))
-                    if correct_option.opt_content in [alt3.opt_content, alt2.opt_content, alt1.opt_content] \
-                            or alt1.opt_content in [alt2.opt_content,
-                                                    alt3.opt_content] or alt2.opt_content == alt3.opt_content:
-                        err_msg = "You cannot set the same content to different options!"
-                    else:
-                        new_card.save()
-                        correct_option.save()
-                        alt1.save()
-                        alt2.save()
-                        alt3.save()
-                        target_coll.coll_cards.add(new_card)  # bugs exist in api.py so use this statement instead
-                except Exception:
-                    pass
+                target_coll = get_object_or_404(Collection, coll_id=form.get('coll_id', None))
+                new_card = Card(card_content=form.get('question'), card_type=form.get('isMultipleChoice', 0),
+                                card_creator=cur_user)
+                correct_option = Option(opt_cid=new_card, opt_content=form.get('correct_answer'),
+                                        opt_isCorrect=True)
+                alt1 = Option(opt_cid=new_card, opt_content=form.get('alternative1'))
+                alt2 = Option(opt_cid=new_card, opt_content=form.get('alternative2'))
+                alt3 = Option(opt_cid=new_card, opt_content=form.get('alternative3'))
+                if correct_option.opt_content in [alt3.opt_content, alt2.opt_content, alt1.opt_content] \
+                        or alt1.opt_content in [alt2.opt_content, alt3.opt_content] or alt2.opt_content == alt3.opt_content:
+                    err_msg = "You cannot set the same content to different options!"
+                else:
+                    new_card.save()
+                    correct_option.save()
+                    alt1.save()
+                    alt2.save()
+                    alt3.save()
+                    target_coll.coll_cards.add(new_card)  # bugs exist in api.py so use this statement instead
 
         coll_id = form.get('coll_id', None)
         if coll_id is None:
             return HttpResponse("Haven't  found this card set, please try another one.")
-        try:
-            target_coll = get_object_or_404(Collection, coll_id=coll_id)
-        except Exception:
-            return redirect('view_set')
+        target_coll = get_object_or_404(Collection, coll_id=coll_id)
         target_cards_raw = get_all_cards(target_coll)
         # divide list into chunks of size 4, in order to display them properly
         target_cards = []
