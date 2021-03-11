@@ -1,0 +1,126 @@
+{
+  "common": {
+    "Apricot": {
+      "description": "Iron ",
+      "url": "rewards/apricot.png"
+    },
+    "Cherry": {
+      "description": "Iron",
+      "url": "rewards/cherry.png"
+    },
+    "PearTomato": {
+      "description": "Iron",
+      "url": "rewards/peartomato.png"
+    },
+    "Strawberry": {
+      "description": "Iron",
+      "url": "rewards/strawberry.png"
+    },
+    "Grapes": {
+      "description": "Iron",
+      "url": "rewards/grapes.png"
+    },
+    "Lemon": {
+      "description": "Iron",
+      "url": "rewards/lemon.png"
+    },
+    "Pear": {
+      "description": "Iron",
+      "url": "rewards/pear.png"
+    }
+  },
+  "uncommon": {
+    "RedApple": {
+      "description": "Bronze",
+      "url": "rewards/apple.png"
+    },
+    "Orange": {
+      "description": "Bronze",
+      "url": "rewards/orange.png"
+    },
+    "JavaApple": {
+      "description": "Bronze",
+      "url": "rewards/javapear.png"
+    },
+    "GreenApple": {
+      "description": "Bronze",
+      "url": "rewards/greenapple.png"
+    },
+    "Plum": {
+      "description": "Bronze",
+      "url": "rewards/plum.png"
+    },
+    "Tangerine": {
+      "description": "Bronze",
+      "url": "rewards/tangerine.png"
+    }
+  },
+  "rare": {
+    "Mango": {
+      "description": "Silver",
+      "url": "rewards/mango.png"
+    },
+    "Avocado": {
+      "description": "Silver",
+      "url": "rewards/avocado.png"
+    },
+    "Banana": {
+      "description": "Silver",
+      "url": "rewards/banana.png"
+    },
+    "Capricorn": {
+      "description": "Silver",
+      "url": "rewards/Capricorn.png"
+    },
+    "Aquarius": {
+      "description": "Silver",
+      "url": "rewards/aquarius.png"
+    },
+    "Pisces": {
+      "description": "Silver",
+      "url": "rewards/Pisces.png"
+    },
+    "Taurus": {
+      "description": "Silver",
+      "url": "rewards/taurus.png"
+    },
+    "Gemini": {
+      "description": "Silver",
+      "url": "rewards/gemini.png"
+    },
+    "Cancer": {
+      "description": "Silver",
+      "url": "rewards/cancer.png"
+    }
+  },
+  "legendary": {
+    "Melon": {
+      "description": "Gold",
+      "url": "rewards/melon.gif"
+    },
+    "Leo": {
+      "description": "Gold",
+      "url": "rewards/leo.png"
+    },
+    "Virgo": {
+      "description": "Gold",
+      "url": "rewards/virgo.png"
+    },
+    "Libra": {
+      "description": "Gold",
+      "url": "rewards/libra.png"
+    },
+    "Scorpio": {
+      "description": "Gold",
+      "url": "rewards/Scorpio.png"
+    },
+    "Aries": {
+      "description": "Gold",
+      "url": "rewards/aries.png"
+    },
+    "Sagittarius": {
+      "description": "Gold",
+      "url": "rewards/Sagittarius.png"
+    }
+  }
+}

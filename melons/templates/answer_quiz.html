@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends 'nav_bar.html' %}
+{% load static %}
+{% block head %}
+<head>
+    <script src="https://kit.fontawesome.com/3afd3220e7.js" crossorigin="anonymous"></script>
+
+    <link rel="shortcut icon" type="image/jpg" href="{% static 'images/android-chrome-192x192.png' %}"/>
+    <link rel="shortcut icon" type="image/jpg" href="{% static 'images/android-chrome-512x512.png' %}"/>
+    <link rel="shortcut icon" type="image/jpg" href="{% static 'images/apple-touch-icon.png' %}"/>
+    <link rel="shortcut icon" type="image/jpg" href="{% static 'images/favicon.ico' %}"/>
+    <link rel="shortcut icon" type="image/jpg" href="{% static 'images/favicon-16x16.png' %}"/>
+    <link rel="shortcut icon" type="image/jpg" href="{% static 'images/favicon-32x32.png' %}"/>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'bs5/bootstrap.css' %}">
+    <title>Quiz</title>
+    <link rel="stylesheet" href="{% static 'webpage_background.css' %}">
+{{ block.super }}
+<style>
+    @media only screen and (min-width: 600px){
+        .fixed_width_item{
+            width: 30rem;
+        }
+    }
+    @media only screen and (max-width: 600px){
+        .fixed_width_item{
+            width: 10rem;
+        }
+    }
+</style>
+</head>
+{% endblock %}
+{% block body %}
+<body>
+{% block nav %}{{ block.super }}{% endblock %}
+  <div class="container" style="
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+   text-align: left;
+   min-height: 100vh;">
+  <div class="row" style="height: 9rem"></div>
+    <div class="row">
+      <div class="col">
+        <form method="post" action="{% url 'result' %}" id="answer"> {% csrf_token %}
+        <input type="hidden" name="question_num" value="{{ question_num }}">
+        <input type="hidden" name="i" value="{{ i }}">
+          <ul class="shadow list-group my-3">
+              {% for question in questions %}
+            <li class="list-group-item">
+              <div class="card my-3 fixed_width_item overflow-auto">
+                <div class="card-body">
+                  <div class="card-title">
+                    <h6><b>{{ forloop.counter }}</b></h6>
+                  </div>
+                  <p class="card-text">{{ question.card_content }}</p><br>
+                    {% for option in question.option_set.all %}
+                  <div class="form-check">
+                    <label for="answer{{ option.opt_id }}">{{ option.opt_content }}</label>
+                    <input class="form-check-input" type="radio" name="answer{{ forloop.parentloop.counter }}" id="answer{{ option.opt_id }}" value="{{ option.opt_id }}">
+                  </div>
+                        {% endfor %}
+                </div>
+              </div>
+            </li>
+              {% endfor %}
+          </ul>
+        </form>
+          <button type="submit" class="btn btn-secondary" form="answer">Confirm</button>
+          <button class="btn btn-outline-secondary" onclick="window.location.href='{% url 'card_set_list' %}' ">Quit</button>
+      </div>
+    </div>
+  </div>
+</body>
+{% endblock %}
+</html>

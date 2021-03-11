@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends 'nav_bar.html' %}
+{% load static %}
+{% block head %}
+<head>
+
+    <link rel="shortcut icon" type="image/jpg" href="{% static 'images/android-chrome-192x192.png' %}"/>
+    <link rel="shortcut icon" type="image/jpg" href="{% static 'images/android-chrome-512x512.png' %}"/>
+    <link rel="shortcut icon" type="image/jpg" href="{% static 'images/apple-touch-icon.png' %}"/>
+    <link rel="shortcut icon" type="image/jpg" href="{% static 'images/favicon.ico' %}"/>
+    <link rel="shortcut icon" type="image/jpg" href="{% static 'images/favicon-16x16.png' %}"/>
+    <link rel="shortcut icon" type="image/jpg" href="{% static 'images/favicon-32x32.png' %}"/>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit a Card Set</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'bs5/bootstrap.css' %}">
+    <style>
+        .question-card{
+            width: 20rem;
+            min-height: 12rem;
+        }
+    </style>
+    <link rel="stylesheet" href="{% static 'webpage_background.css' %}">
+    {{ block.super }}
+</head>
+{% endblock %}
+{% block body %}
+<body>
+{% block nav %}{{ block.super }}{% endblock %}
+<div class="container" >
+    <div class="row" style="height: 9rem"></div>
+{% for i in target_cards %}
+    <div class="row">
+        {% for card in i %}
+        <div class="col-3">
+            <div class="shadow card question-card mb-2">
+                <div class="card-body">
+                    <div class="col" style="min-height: 7.5rem">
+                        <p class="fs-4 card-text">{{ card.card_content }}</p>
+                    </div>
+                    <form method="post" id="dlt_form"> {% csrf_token %}
+                        <input type="hidden" name="source" value="delete_card">
+                        <input type="hidden" name="coll_id" id="coll_id" value="{{ coll_id }}">
+                        <input type="hidden" name="dlt_id" value="{{ card.card_id }}">
+                    </form>
+                    <button class="btn btn-link link-danger float-end" type="submit" form="dlt_form">Delete</button>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% endfor %}
+<div class="row">
+    <div class="col">
+        <button class="my-3 btn btn-outline-success float-end" onclick="display_create_card()">Create a new Card</button>
+        <button class="my-3 mx-2 btn btn-outline-secondary float-end" onclick="window.location.href='{% url 'view_set' %}'">Back</button>
+    </div>
+    </div>
+    <div class="row">
+    <div class="col">
+        <div class="shadow card my-3" style="display: none" id="create_card_panel">
+                  <div class="card-body">
+                      <form method="post" id="new-card"> <!-- change target to backend url --> {% csrf_token %}
+                          <input type="hidden" name="source" value="add_card">
+                          <input type="hidden" name="coll_id" id="coll_id" value="{{ coll_id }}">
+                          <label for="question">Question: </label>
+                          <input class="form-control" type="text" name="question" id="question"><br>
+                          <label for="correct_answer">Correct Answer: </label>
+                          <input class="form-control" type="text" name="correct_answer" id="correct_answer"><br>
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" onclick="display()" value="1" name="isMultipleChoice" id="isMultipleChoice">
+                            <label class="form-check-label" for="isMultipleChoice">Is this card a multiple choice question?</label>
+                          </div>
+                          <hr>
+                          <div id="alternatives" style="display: none">
+                              <label for="alternative1">Answer2: </label>
+                              <input class="form-control" type="text" name="alternative1" id="alternative1"><br>
+                              <label for="alternative2">Answer3: </label>
+                              <input class="form-control" type="text" name="alternative2" id="alternative2"><br>
+                              <label for="alternative3">Answer4: </label>
+                              <input class="form-control" type="text" name="alternative3" id="alternative3"><br>
+                          </div>
+
+                          <script>
+                              function display(){
+                                  let x = document.getElementById("alternatives");
+                                  if (x.style.display === "none") {
+                                      x.style.display = "block";
+                                  } else {
+                                      x.style.display = "none";
+                                  }
+                              }
+                          </script>
+                      </form>
+                      <button class="btn btn-secondary" type="submit" form="new-card">Create</button>
+                      <button class="btn btn-warning float-end" onclick="window.location.href = '{% url 'flash_card' %}'">Cancel</button>
+                  </div>
+              </div>
+        <script>
+            let err_msg = '{{ err_msg }}';
+            if(err_msg !== 'null'){alert(err_msg)}
+            function display_create_card(){
+                let x = document.getElementById("create_card_panel");
+                if (x.style.display === "none") {
+                    x.style.display = "block";
+                } else {
+                    x.style.display = "none";
+                }
+            }
+        </script>
+    </div>
+    </div>
+
+</div>
+<script src="https://unpkg.com/@popperjs/core@2.4.0/dist/umd/popper.min.js"></script>
+<script src="{% static 'bs5/bootstrap.js' %}"></script>
+</body>
+{% endblock %}
+</html>

@@ -1,0 +1,158 @@
+{#todo: 修改更新注册页面效果#}
+
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="shortcut icon" type="image/jpg" href="{% static 'images/android-chrome-192x192.png' %}"/>
+    <link rel="shortcut icon" type="image/jpg" href="{% static 'images/android-chrome-512x512.png' %}"/>
+    <link rel="shortcut icon" type="image/jpg" href="{% static 'images/apple-touch-icon.png' %}"/>
+    <link rel="shortcut icon" type="image/jpg" href="{% static 'images/favicon.ico' %}"/>
+    <link rel="shortcut icon" type="image/jpg" href="{% static 'images/favicon-16x16.png' %}"/>
+    <link rel="shortcut icon" type="image/jpg" href="{% static 'images/favicon-32x32.png' %}"/>
+
+    <link rel="stylesheet" href="{% static 'bs5/bootstrap.min.css' %}" />
+{#    <link rel="stylesheet" href="../static/bs5/bootstrap.css" />#}
+    <link href='https://fonts.googleapis.com/css?family=Comfortaa' rel='stylesheet'>
+
+    <title>Register</title>
+
+    <style>
+        .center {
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+        }
+        .center-horizontal{
+            margin: 0;
+            position: absolute;
+            left: 50%;
+            -ms-transform: translateX(-50%);
+            transform: translateX(-50%);
+        }
+        .background {
+                background: linear-gradient(to bottom, whitesmoke 0%, lightslategray 100%);
+            }
+        .fill { 
+            min-height: 100%;
+            height: 100%;
+        }
+        body {
+            font-family: 'Comfortaa', monospace;font-size: 22px;
+        }
+    </style>
+</head>
+<body>
+    <div class = "container-fluid fill center d-flex justify-content-center align-items-center background">
+        <form class="form" method="POST">
+            {% csrf_token %}
+            <div class="row">
+                <h1 class="display-1 text-center">Sign Up</h1>
+            </div>
+            <br>
+
+            {{ form.non_field_errors }}
+            <div class="row">
+                <div class="fieldWrapper col">
+                    <label for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
+                    {{ form.username }}
+                </div>
+            </div>
+
+            <div class="row">
+                {% if form.username.errors %}
+                    <p style="color: red; font-size: small">{{ form.username.errors.0|escape }}</p>
+                {% elif form.username.help_text %}
+                    <p style="color: dimgray; font-size: small">{{ form.username.help_text|safe }}</p>
+                {% endif %}
+            </div>
+
+            <div class="row">
+                <div class="fieldWrapper col-6">
+                    <label for="{{ form.fstname.id_for_label }}">{{ form.fstname.label }}</label>
+                    {{ form.fstname }}
+                </div>
+
+                <div class="fieldWrapper col-6">
+                    <label for="{{ form.sndname.id_for_label }}">{{ form.sndname.label }}</label>
+                    {{ form.sndname }}
+                </div>
+            </div>
+
+            <div class="row">
+                {% if form.fstname.errors%}
+                    <p style="color: red; font-size: small">{{ form.fstname.errors.0|escape }}</p>
+                {% elif form.sndname.errors %}
+                    <p style="color: red; font-size: small">{{ form.sndname.errors.0|escape }}</p>
+                {% else %}
+                    <p> </p>
+                {% endif %}
+            </div>
+
+
+            <div class="row">
+                <div class="fieldWrapper col">
+                    <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+                    {{ form.email }}
+                </div>
+            </div>
+
+            <div class="row">
+                {% if form.email.errors %}
+                    <p style="color: red; font-size: small">{{ form.email.errors.0|escape }}</p>
+                {% else %}
+                    <p> </p>
+                {% endif %}
+            </div>
+
+            <div class="row">
+                <div class="fieldWrapper col-6">
+                    <label for="{{ form.paswd1.id_for_label }}">{{ form.paswd1.label }}</label>
+                    {{ form.paswd1 }}
+                </div>
+
+                <div class="fieldWrapper col-6">
+                    <label for="{{ form.paswd2.id_for_label }}">{{ form.paswd2.label }}</label>
+                    {{ form.paswd2 }}
+                </div>
+            </div>
+
+            <div class="row">
+                {% if form.paswd1.errors%}
+                    <p style="color: red; font-size: small">{{ form.paswd1.errors.0|escape }}</p>
+                {% elif form.paswd2.errors %}
+                    <p style="color: red; font-size: small">{{ form.paswd2.errors.0|escape }}</p>
+                {% elif form.paswd1.help_text %}
+                    <p style="color: dimgray; font-size: small">{{ form.paswd1.help_text|safe }}</p>
+                {% endif %}
+            </div>
+
+            <br>
+
+            <div class="row">
+                <div class="col-6">
+                    <button type="submit" size="10" class="btn btn-primary btn-lg" style="width: 100%">Register</button>
+                </div>
+
+                <div class="col-6">
+                    <a href="{% url 'login' %}" size="10" class="btn btn-primary btn-lg" style="width: 100%">Cancel</a>
+                </div>
+            </div>
+
+            <br>
+
+            <div class="row">
+                <p class="text-center">Already registered? Login <a href="{% url 'login' %}"> here </a> </p>
+            </div>
+        </form>
+    </div>
+
+    <script src="{% static 'bs5/bootstrap.min.js' %}"></script>
+</body>
+</html>

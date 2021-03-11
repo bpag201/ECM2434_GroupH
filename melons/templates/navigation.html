@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  {% extends 'nav_bar.html' %}
+  {% load static %}
+  {% block head %}
+<head>
+    <script src="https://kit.fontawesome.com/3afd3220e7.js" crossorigin="anonymous"></script>
+
+    <link rel="shortcut icon" type="image/jpg" href="{% static 'images/android-chrome-192x192.png' %}"/>
+    <link rel="shortcut icon" type="image/jpg" href="{% static 'images/android-chrome-512x512.png' %}"/>
+    <link rel="shortcut icon" type="image/jpg" href="{% static 'images/apple-touch-icon.png' %}"/>
+    <link rel="shortcut icon" type="image/jpg" href="{% static 'images/favicon.ico' %}"/>
+    <link rel="shortcut icon" type="image/jpg" href="{% static 'images/favicon-16x16.png' %}"/>
+    <link rel="shortcut icon" type="image/jpg" href="{% static 'images/favicon-32x32.png' %}"/>
+
+    <link rel="stylesheet" type="text/css" href="{% static 'bs5/bootstrap.css' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Navigation</title>
+  <style>
+    .feature_tab{
+        height: 10rem;
+    }
+    .tab_content{
+        position: relative;
+        top:43%;
+    }
+    .background_content{
+        position: relative;
+        top:80%;
+        color: white;
+    }
+  </style>
+{{ block.super }}
+
+</head>
+  {% endblock %}
+  {% block body %}
+<body>
+  <div class="container" style="text-align: center;">
+    <div class="row" style="height: 27.5rem;background-size:cover; background-repeat:no-repeat;background-position: center;
+        background-image: url('{% static 'images/background.png' %}');">
+        {% block nav_white %}{{ block.super }}{% endblock %}
+      <div class="col-3 background_content"><h1>01</h1></div>
+      <div class="col-3 background_content"><h1>02</h1></div>
+      <div class="col-3 background_content"><h1>03</h1></div>
+      <div class="col-3 background_content"><h1>04</h1></div>
+    </div>
+    <div class="row">
+      <div class="feature_tab col-3 border-start border-dark"><a role="button" href="{% url 'leaderboard' %}" style="text-decoration: none; color: black"><h4 class="tab_content">LEADER BOARD</h4></a></div>
+      <div class="feature_tab col-3 border-start border-dark"><a role="button" href="{% url 'card_set_list' %}" style="text-decoration: none; color: black"><h4 class="tab_content">STUDY CARD</h4></a></div>
+      <div class="feature_tab col-3 border-start border-end border-dark"><a role="button" href="{% url 'shop' %}" style="text-decoration: none; color: black"><h4 class="tab_content">SHOP</h4></a></div>
+      <div class="feature_tab col-3 border-start border-dark"><a role="button" style="text-decoration: none; color: black"><h4 class="tab_content">More Is Coming!</h4></a></div>
+    </div>
+  </div>
+<script src="{% static 'bs5/bootstrap.js' %}"></script>
+</body>
+{% endblock %}
+</html>

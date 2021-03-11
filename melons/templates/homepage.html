@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="shortcut icon" type="image/jpg" href="{% static 'images/android-chrome-192x192.png' %}"/>
+    <link rel="shortcut icon" type="image/jpg" href="{% static 'images/android-chrome-512x512.png' %}"/>
+    <link rel="shortcut icon" type="image/jpg" href="{% static 'images/apple-touch-icon.png' %}"/>
+    <link rel="shortcut icon" type="image/jpg" href="{% static 'images/favicon.ico' %}"/>
+    <link rel="shortcut icon" type="image/jpg" href="{% static 'images/favicon-16x16.png' %}"/>
+    <link rel="shortcut icon" type="image/jpg" href="{% static 'images/favicon-32x32.png' %}"/>
+
+    <link rel="stylesheet" href="{% static 'bs5/bootstrap.min.css' %}" />
+{#    <link rel="stylesheet" href="../static/bs5/bootstrap.css" />#}
+    <link href='https://fonts.googleapis.com/css?family=Comfortaa' rel='stylesheet'>
+
+    <title>Homepage</title>
+
+    <style>
+        .center {
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+        }
+        .center-horizontal{
+            margin: 0;
+            position: absolute;
+            left: 50%;
+            -ms-transform: translateX(-50%);
+            transform: translateX(-50%);
+        }
+        .background {
+                background: linear-gradient(to bottom, whitesmoke 0%, lightslategray 100%);
+            }
+        .fill { 
+            min-height: 100%;
+            height: 100%;
+        }
+        body {
+            font-family: 'Comfortaa', monospace;font-size: 22px;
+        }
+    </style>
+</head>
+<body>
+    <div class="d-flex justify-content-end">
+        
+    </div>
+    <div class = "container-fluid fill center d-flex justify-content-center align-items-center background">
+        <div class="row">
+            <h1 class="display-1 text-center">Welcome to Melons</h1>
+            <h3 class="text-center">What is Melons?</h3>
+            <h5 class="text-center">A fun study tool where you can:</h5>
+            <h5 class="text-center">Create study cards</h5>
+            <h5 class="text-center">Earn rewards</h5>
+            <h5 class="text-center">Customise your profile</h5>
+            <br>
+            <div class="d-grid gap-2 col-4 mx-auto">
+                <a href="{% url 'login' %}" class="btn btn-primary btn-lg">Login/Register</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'bs5/bootstrap.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends 'nav_bar.html' %}
+{% load static %}
+{% block head %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="image/jpg" href="{% static 'images/android-chrome-192x192.png' %}"/>
+    <link rel="shortcut icon" type="image/jpg" href="{% static 'images/android-chrome-512x512.png' %}"/>
+    <link rel="shortcut icon" type="image/jpg" href="{% static 'images/apple-touch-icon.png' %}"/>
+    <link rel="shortcut icon" type="image/jpg" href="{% static 'images/favicon.ico' %}"/>
+    <link rel="shortcut icon" type="image/jpg" href="{% static 'images/favicon-16x16.png' %}"/>
+    <link rel="shortcut icon" type="image/jpg" href="{% static 'images/favicon-32x32.png' %}"/>
+    <title>Leaderboard</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'bs5/bootstrap.css' %}">
+{{ block.super }}
+</head>
+{% endblock %}
+{% block body %}
+<body>
+{% block nav %}{{ block.super }}{% endblock %}
+<div class="container" style="text-align: center">
+    <div class="col">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Full Name</th>
+                <th scope="col">Nickname</th>
+                <th scope="col">Rank</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for p in top_players %}
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                {% if p.avatar.url != '' %}
+                    <td><a role="button" onclick="window.location.href='/profile/'.concat('{{ p.user.username }}')"><img class="img-fluid rounded-circle" style="width: 2rem; height: 2rem; object-fit: cover" src="{% static p.avatar.url %}" alt="">
+                    {{ p.user.first_name }} {{ p.user.last_name }}</a></td>
+                {% else %}
+                    <td><a role="button" onclick="window.location.href='/profile/'.concat('{{ p.user.username }}')"><img class="img-fluid rounded-circle" style="width: 2rem; height: 2rem; object-fit: cover" src="{% static 'images/bex3.jpg' %}" alt="">
+                    {{ p.user.first_name }} {{ p.user.last_name }}</a></td>
+                {% endif %}
+                <td>{{ p.nickname }}</td>
+                <td>{{ p.get_user_rank }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <button class="btn btn-outline-secondary" onclick="window.location.href='{% url 'navigation' %}'">Back</button>
+    </div>
+</div>
+<script src="https://unpkg.com/@popperjs/core@2.4.0/dist/umd/popper.min.js"></script>
+<script src="{% static 'bs5/bootstrap.js' %}"></script>
+</body>
+{% endblock %}
+</html>
