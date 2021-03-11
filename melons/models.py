@@ -62,8 +62,8 @@ class Profile(models.Model):
 
 
 class Item(models.Model):
-    # item_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    item_name = models.CharField(primary_key=True, max_length=50)
+    item_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    item_name = models.CharField(max_length=50)
     item_amount = models.IntegerField(default=1)
     item_owner = models.ForeignKey(Profile, on_delete=models.CASCADE)
 

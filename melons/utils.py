@@ -49,7 +49,7 @@ def get_user_rank(score):
         return "Coconut Earl "
     elif score < 600:
         return "Pineapple Marquis"
-    elif score < 770:
+    else:
         return "Melon Duke"
 
 
