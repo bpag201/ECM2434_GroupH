@@ -75,7 +75,7 @@
                     {% else %}
                     <img class="img-fluid rounded-circle" src="{% static 'images/bex3.jpg' %}" alt="" style="height: 5rem; width: 5rem; object-fit: cover">
                   {% endif %}
-                <h4>{{ c.coll_creator.userprofile.nickname }}</h4>
+                <h4>{{ c.coll_creator.profile.nickname }}</h4>
                 <small class="text-muted">{{ c.coll_create_date.date }}</small>
                 <small></small>
               </div>
@@ -118,7 +118,7 @@
 <script>
   let is_invalid = {{ invalid_quiz }};
   if(is_invalid === 1) alert("The target card set has no questions.");
-  else id(is_invalid === 2) alert("The target card set is not found");
+  else if (is_invalid === 2) alert("The target card set is not found");
   let search_tags = {{search_tags|safe}};
   for(let h=0;h<search_tags.length;h++){
       addSearchTags(search_tags[h]);

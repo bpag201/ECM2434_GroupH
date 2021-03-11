@@ -193,7 +193,7 @@ def answer_quiz(request):
             elif len(quiz_cards) < 5:
                 selected_questions = quiz_cards
             else:
-                selected_questions = sample(quiz_cards, 5)
+                selected_questions = sample(list(quiz_cards), 5)
         except Exception:
             return redirect('card_set_list', invalid=2)
 
@@ -378,9 +378,10 @@ def edit_set(request):
                     alt1 = Option(opt_cid=new_card, opt_content=form.get('alternative1'))
                     alt2 = Option(opt_cid=new_card, opt_content=form.get('alternative2'))
                     alt3 = Option(opt_cid=new_card, opt_content=form.get('alternative3'))
-                    if correct_option.opt_content in [alt3.opt_content, alt2.opt_content, alt1.opt_content] \
-                            or alt1.opt_content in [alt2.opt_content,
-                                                    alt3.opt_content] or alt2.opt_content == alt3.opt_content:
+                    if form.get('isMultipleChoice', 0) != 0 and (correct_option.opt_content in [alt3.opt_content,
+                                                    alt2.opt_content, alt1.opt_content] or alt1.opt_content in [alt2.opt_content,
+                                                    alt3.opt_content] or alt2.opt_content == alt3.opt_content):
+                        print(form.get('isMultipleChoice'))
                         err_msg = "You cannot set the same content to different options!"
                     else:
                         new_card.save()
