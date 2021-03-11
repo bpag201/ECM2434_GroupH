@@ -47,6 +47,7 @@
     <div class="row">
       <div class="col">
         <form method="post" action="{% url 'result' %}" id="answer"> {% csrf_token %}
+        <input type="hidden" name="post_token" value="{{ postToken }}">
         <input type="hidden" name="question_num" value="{{ question_num }}">
         <input type="hidden" name="i" value="{{ i }}">
           <ul class="shadow list-group my-3">
