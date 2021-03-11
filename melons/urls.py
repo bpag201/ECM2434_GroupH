@@ -15,7 +15,7 @@ urlpatterns = [
                                                                             # be used for quiz cards
     path('edit_set/', views.edit_set, name='edit_set'),
     path('view_set/', views.view_set, name='view_set'),
-path('view_set/<invalid>', views.view_set, name='view_set'),
+    path('view_set/<invalid>', views.view_set, name='view_set'),
     path('navigation/', views.navigation_view, name='navigation'),
     path('result/', views.result, name='result'),
     path('logout/', views.log_out_operation, name='logout'),
