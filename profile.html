@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends 'nav_bar.html' %}
+{% load static %}
+{% block head %}
+<head>
+
+    <script src="https://kit.fontawesome.com/3afd3220e7.js" crossorigin="anonymous"></script>
+    <link rel="shortcut icon" type="image/jpg" href="{% static 'images/android-chrome-192x192.png' %}"/>
+    <link rel="shortcut icon" type="image/jpg" href="{% static 'images/android-chrome-512x512.png' %}"/>
+    <link rel="shortcut icon" type="image/jpg" href="{% static 'images/apple-touch-icon.png' %}"/>
+    <link rel="shortcut icon" type="image/jpg" href="{% static 'images/favicon.ico' %}"/>
+    <link rel="shortcut icon" type="image/jpg" href="{% static 'images/favicon-16x16.png' %}"/>
+    <link rel="shortcut icon" type="image/jpg" href="{% static 'images/favicon-32x32.png' %}"/>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Redressed&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile</title>
+    <link rel="stylesheet" href="{% static 'webpage_background.css' %}">
+    <style>
+        .user-item{
+            width: 8rem;
+            height: 16rem;
+            background-size: 8rem 16rem;
+        }
+        .icon-img{
+            width: 2rem;
+            height: 2rem;
+            position: relative;
+            top: -5px;
+        }
+        [class*="col"]{
+            text-align: center;
+        }
+        @media only screen and(min-width: 600px){
+            .fixed_width_item{
+                width: 40rem;
+            }
+        }
+        @media only screen and(max-width: 600px){
+            .fixed_width_item{
+                width: 15rem;
+            }
+        }
+    </style>
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'bs5/bootstrap.css' %}">
+</head>
+{% endblock %}
+{% block body %}
+<body>
+{% block nav %}{{ block.super }}{% endblock %}
+<div class="container" >
+    <div class="row" style="max-width: 70rem; position: relative; left: 9%">
+        <ul class="nav nav-tabs my-3" id="profileRedirect" role="tablist">
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="basicProfile-tab" data-bs-toggle="tab" href="#basicProfile" role="tab" aria-controls="basicProfile" aria-selected="true">Basic Profile</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="inventory-tab" data-bs-toggle="tab" href="#inventory" role="tab" aria-controls="inventory" aria-selected="false">Inventory</a>
+            </li>
+            {% if perm_valid %}
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="editProfile-tab" data-bs-toggle="tab" href="#editProfile" role="tab" aria-controls="editProfile" aria-selected="false">Edit Profile</a>
+            </li>
+            {% endif %}
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane fade show active" id="basicProfile" role="tabpanel" aria-labelledby="basicProfile-tab">
+                <div class="row">
+                    <div class="col-md-4">
+                            <input type="text" name="other_username" id="other_username" placeholder="Search for other user">
+                            <a role="button" onclick="window.location.href='/profile/'.concat(document.getElementById('other_username').value)"><img style="width: 2rem; height: 2rem" src="{% static 'images/Search.png' %}" alt=""></a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <img src="{% static avatar %}" alt="" class="my-3 img-fluid rounded-circle" style="height:200px; width: 200px; border-bottom: 8px; object-fit:cover;">
+                        <p>{{ title }}</p>
+                        <h1> {{ user_full_name }} </h1>
+                        {% if user_tier %}
+                            <small> {{ user_tier }} </small><br><br>
+                        {% else %}
+                            <br><br>
+                        {% endif %}
+                        <div class="row" >
+                            <div class="col-6">
+                                <p>DOB: </p>
+                            </div>
+                            {% if DOB %}
+                                <div class="col-6" >
+                                    <p> {{ DOB }} </p>
+                                </div>
+                            {% else %}
+                                <div class="col-6" >
+                                    <p> ? </p>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="row" >
+                            <div class="col-6">
+                                <p>Nickname: </p>
+                            </div>
+                            <div class="col-6" >
+                                {% if user_nickname %}
+                                    <p> {{ user_nickname }} </p>
+                                {% else %}
+                                    <p> ? </p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <p>Email: </p>
+                            </div>
+                            <div class="col-6">
+                                <p>{{ email }}</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <p>Course: </p>
+                            </div>
+                            <div class="col-6">
+                                {% if course %}
+                                <p>{{ course }}</p>
+                                {% else %}
+                                <p> ? </p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2"></div>
+                    <div class="col-md-6" style="text-align: start">
+                        <div class="row" style="height: 3rem"></div>
+                        <div class="row my-4">
+                            <h4><img class="icon-img mx-1" src="{% static '/images/Gold.jpg' %}" alt="">Gold</h4><hr>
+                            <p>{{ gold }}</p>
+                        </div>
+                        <div class="row my-4">
+                            <h4><img class="icon-img mx-1"  src="{% static '/images/Achievement.jpg' %}" alt="">Achievement</h4><hr>
+                            <ul class="list-group list-group-flush">
+                                {% for a in achievement %}
+                                    <li class="list-group-item"><h4>{{ a.name }}</h4><p>{{ a.description }}</p></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div class="row my-4">
+                            <h4><img class="icon-img mx-1"  src="{% static 'images/Team.jpg' %}" alt="">Team</h4><hr>
+                            <p>{{ team }}</p>
+                        </div>
+                        <div class="row my-4">
+                            <h4><img class="icon-img mx-1"  src="{% static 'images/Society.png' %}" alt="">Society</h4><hr>
+                            <p>{{ society }}</p>
+                        </div>
+                        <div class="row my-4">
+                            <h4><img class="icon-img mx-1"  src="{% static 'images/Rank.png' %}" alt="">Rank</h4><hr>
+                            <p class="fs-5" style="font-family: 'Redressed', cursive;">{{ rank }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="inventory" role="tabpanel" aria-labelledby="inventory-tab">
+                <div class="row">
+{#                    <div class="col-2">#}
+{#                        <div class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">#}
+{#                            <a class="nav-link active" id="collections-tab" data-bs-toggle="pill" href="#collections" role="tab" aria-controls="collections" aria-selected="true">Collections</a>#}
+{#                            <a class="nav-link" id="avatars-tab" data-bs-toggle="pill" href="#avatars" role="tab" aria-controls="avatars" aria-selected="false">Avatars</a>#}
+{#                            <a class="nav-link" id="badges-tab" data-bs-toggle="pill" href="#badges" role="tab" aria-controls="badges" aria-selected="false">Badges</a>#}
+{#                        </div>#}
+{#                    </div>#}
+                    <div class="col">
+                        <div class="tab-content">
+                            <div class="row">
+                                    {% for a in inventory %}
+                                        <div class="col-md-2 col-sm-12">
+                                        <a style="width: 9rem; height: 17rem" role="button" data-bs-toggle="modal" data-bs-target="#modal{{ a.0 }}">
+                                        <div style="width: 9rem; height: 17rem">
+                                            <div class="card user-item" id="{{ a.0 }}">
+                                                <span style="display: flex; height: 100%; justify-content: center; align-items: center"><img src="{% static a.2 %}" alt="" style="object-fit: contain; width: 7rem; height: 7rem"></span>
+                                            </div>
+                                        </div>
+                                        </a>
+                                        </div>
+                                        <div class="modal fade" id="modal{{ a.0 }}" tabindex="-1" aria-labelledby="modal{{ a.0 }}Label" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title" id="modal{{ a.0 }}Label">{{ a.0 }}</h4>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body" style="min-height: 8rem; display: flex; justify-content: center; align-items: center">
+                                                    <p class="fs-5" style="font-family: 'Redressed', cursive;">{{ a.1 }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% if perm_valid %}
+            <div class="tab-pane fade" id="editProfile" role="tabpanel" aria-labelledby="editProfile-tab">
+                <div class="row">
+                    <div class="col">
+                        <div class="card mb-4 fixed_width_item">
+                            <div class="card-body">
+                                <h4 class="card-title">Edit your profile</h4>
+                                <div class="row">
+                                    <div class="col">
+                                        <form enctype="multipart/form-data" method="post" id="profile-form" style="text-align: start"> {% csrf_token %}
+                                            <div class="mb-2">
+                                                <label for="new-avatar">Avatar:</label>
+                                                <input type="file" name="avatar" id="new-avatar">
+                                            </div>
+                                            <div class="mb-2">
+                                                <label class="form-label" for="first-name">Last Name:</label>
+                                                <input class="form-control" type="text" name="first-name" id="first-name">
+                                                <label class="form-label" for="last-name">First Name:</label>
+                                                <input class="form-control" type="text" name="last-name" id="last-name">
+                                            </div>
+                                            <div class="mb-2">
+                                                <label class="form-label" for="titles">Title:</label>
+                                                <select class="form-control" name="titles" id="titles">
+                                                    <option value="Student">Student</option>
+                                                    <option value="Staff">Staff</option>
+                                                    <option value="Support Staff">Support Staff</option>
+                                                    <option value="Developer">Developer</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-2">
+                                                <label class="form-label" for="DOB">Date of Birth:</label>
+                                                <input class="form-control" type="date" name="DOB" id="DOB">
+                                            </div>
+                                            <div class="mb-2">
+                                                <label class="form-label" for="nickname">Nickname:</label>
+                                                <input class="form-control" type="text" name="nickname" id="nickname">
+                                            </div>
+                                            <div class="mb-2">
+                                                <label class="form-label" for="email">Email:</label>
+                                                <input class="form-control" type="email" name="email" id="email">
+                                            </div>
+                                            <div class="mb-2">
+                                                <label class="form-label" for="course">Course:</label>
+                                                <input class="form-control" type="text" name="course" id="course">
+                                            </div>
+                                            <div class="mb-2">
+                                                <label class="form-label" for="team">Team:</label>
+                                                <input class="form-control" type="text" name="team" id="team">
+                                            </div>
+                                            <div class="mb-2">
+                                                <label class="form-label" for="society">Society:</label>
+                                                <input class="form-control" type="text" name="society" id="society">
+                                            </div>
+                                            <button class="btn btn-warning" type="submit" form="profile-form">Confirm</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+  <script src="https://unpkg.com/@popperjs/core@2.4.0/dist/umd/popper.js"></script>
+  <script src="{% static 'bs5/bootstrap.js' %}"></script>
+  <script>
+      // Note that we need to load all description text when the page is load since django template only runs once
+      // store all descriptions in descriptions
+      {#let descriptions = {#}
+      {#    {% for i in inventory %}#}
+      {#        "{{ i.0 }}": "{{ i.1 }}"#}
+      {#    {% endfor %}#}
+      {#/}#}
+      {#let userItems = document.getElementsByClassName("user-item");#}
+      {#for(let i=0;i<userItems.length;i++){#}
+      {#    userItems[i].addEventListener('mouseover', function (){displayDescription(userItems[i].id)});#}
+      {#/}#}
+
+      {#function displayDescription(id){#}
+      {#    document.getElementById("title-text").innerHTML = id;#}
+      {#    document.getElementById("description-text").innerHTML = descriptions[id];#}
+      {#/}#}
+  </script>
+</body>
+{% endblock %}
+</html>
